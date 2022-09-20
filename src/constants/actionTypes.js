@@ -1,0 +1,3 @@
+export const PIXEL_DRAG = "PIXEL_DRAG";
+export const UPDATE_URL_PARAMETER = "UPDATE_URL_PARAMETER";
+export const BIND_LAYER_DATA = "BIND_LAYER_DATA";

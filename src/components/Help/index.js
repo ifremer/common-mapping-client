@@ -5,4 +5,4 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-export { default as AppContainer } from "components/App/AppContainer.js";
+export { default as HelpContainer } from "components/Help/HelpContainer.js";

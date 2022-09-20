@@ -5,4 +5,5 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-export { default as AppContainer } from "components/App/AppContainer.js";
+export { default as MapContainer } from "components/Map/MapContainer.js";
+export { default as MapContainer2D } from "components/Map/MapContainer2D.js";

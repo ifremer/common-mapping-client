@@ -15,7 +15,29 @@ const CORE_CONFIG = Immutable.fromJS(coreConfig);
 const OPS_CONFIG = Immutable.fromJS(window.APPLICATION_CONFIG);
 
 // define your overrides for Core config here
-const APP_CONFIG = Immutable.fromJS({});
+const APP_CONFIG = Immutable.fromJS({
+    APP_TITLE: "EOSC Argo Marine data discovery",
+    APP_LOGO: "img/eosc-hub-web.png",
+    URLS: {
+        layerConfig: [
+            {
+                url:
+                    "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+                type: "wmts/xml"
+            },
+            {
+                url: "default-data/ifremer-data/layers.json",
+                type: "json"
+            }
+        ],
+        paletteConfig: "default-data/ifremer-data/palettes.json"
+    },
+    /* MAP */
+    VERTICAL_PROFILE_FILL_COLOR: "rgba(255,200,68, 1)",
+    VERTICAL_PROFILE_STROKE_COLOR: "rgba(48, 48, 48, 1)",
+    VERTICAL_PROFILE_STROKE_WEIGHT: 1.25,
+    VERTICAL_PROFILE_OUTLINE_COLOR: "rgba(0, 0, 0, 1)"
+});
 
 // define and export the final config
 const appConfig = CORE_CONFIG.mergeDeep(APP_CONFIG)

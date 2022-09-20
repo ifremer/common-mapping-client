@@ -5,4 +5,8 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-export { default as AppContainer } from "components/App/AppContainer.js";
+@import "~styles/colors";
+
+.logo {
+    margin-right: 20px;
+}
