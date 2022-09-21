@@ -14,7 +14,7 @@
             "thumbnailImage": "img/argo_discovery_thumbnail.png",
             "updateParameters": {
                 "time": true,
-                "facets": {
+                "filters": {
                    "selected_parameter" : {
                         "label": "Select parameter",
                         "property":"selectedParameterMax",
@@ -55,14 +55,14 @@
             "thumbnailImage": "img/argo_discovery_thumbnail.png",
             "updateParameters": {
                 "time": true,
-                "facets": {
+                "filters": {
                     "parameter" : {
                         "label": "Select parameter",
                         "property":"parameter_value",
                         "value": "35",
                         "list": [
-                            {"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":35},
-                            {"palette":"sea-surface-salinity","label":"Sea water salinity","code":30}
+                            {"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":"35"},
+                            {"palette":"sea-surface-salinity","label":"Sea water salinity","code":"30"}
                         ],
                         "type": "select"
                     },

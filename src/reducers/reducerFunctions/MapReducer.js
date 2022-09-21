@@ -113,17 +113,17 @@ export default class MapReducer extends MapReducerCore {
         let alerts = state.get("alerts");
         let actionLayer = action.layer;
 
-        // shortcut non-updates
-        if (
-            action.value ===
-            actionLayer.getIn(["updateParameters", "facets", action.parameter]).get("value")
-        ) {
-            return state;
-        }
+        // TODO : improve and add again ? shortcut non-updates
+        // if (
+        //     action.value ===
+        //     actionLayer.getIn(["updateParameters", "filters", action.parameter]).get("value")
+        // ) {
+        //     return state;
+        // }
 
         //mise a jour du parametre
         actionLayer = actionLayer.setIn(
-            ["updateParameters", "facets", action.parameter, "value"],
+            ["updateParameters", "filters", action.parameter, "value"],
             action.value
         );
 
@@ -131,7 +131,7 @@ export default class MapReducer extends MapReducerCore {
         state.get("maps").forEach(map => {
             if (
                 actionLayer.get("isActive") &&
-                actionLayer.getIn(["updateParameters", "facets", action.parameter])
+                actionLayer.getIn(["updateParameters", "filters", action.parameter])
             ) {
                 map.clearCacheForLayer(actionLayer);
                 // update the layer and track if any fail
@@ -182,9 +182,9 @@ export default class MapReducer extends MapReducerCore {
         if (action.palette) {
             // get palette min/max
             const minKey = action.palette.get(0).get("value");
-            const min = minKey.match(/\d/g) || "0";
+            const min = minKey.match(/\d+/g)[0] || "0";
             const maxKey = action.palette.get(action.palette.size - 1).get("value");
-            const max = maxKey.match(/\d/g) || "0";
+            const max = maxKey.match(/\d+/g)[0] || "0";
 
             // update palette name
             newLayer = actionLayer.delete("palette");

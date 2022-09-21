@@ -13,14 +13,12 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import * as mapActions from "_core/actions/mapActions";
 import * as mapActionsIfr from "actions/mapActions";
 import MiscUtil from "_core/utils/MiscUtil";
 import { LayerControlContainer as LayerControlContainerCore } from "_core/components/LayerMenu/LayerControlContainer.js";
 import coreStyles from "_core/components/LayerMenu/LayerControlContainer.scss";
-import styles from "components/LayerMenu/LayerControlContainer.scss";
 import displayStyles from "_core/styles/display.scss";
 import { withStyles } from "@material-ui/core/styles";
 import * as appStrings from "constants/appStrings";
@@ -66,9 +64,23 @@ export class LayerControlContainer extends LayerControlContainerCore {
             nextLayer.get("max") !== currLayer.get("max") ||
             nextLayer.get("units") !== currLayer.get("units") ||
             nextLayer.get("displayIndex") !== currLayer.get("displayIndex") ||
-            nextLayer.get("updateParameters").get("facets") !==
-                currLayer.get("updateParameters").get("facets")
+            nextLayer.get("updateParameters").get("filters") !==
+                currLayer.get("updateParameters").get("filters")
         );
+    }
+
+    setLayerActive(active) {
+        this.isChangingPosition = false;
+        this.isChangingOpacity = false;
+        const value = this.props.layer.getIn(["updateParameters", "filters", "parameter", "value"]);
+        this.props.mapActionsIfr.bindLayerData(
+            this.props.layer,
+            "parameter",
+            value,
+            "sea-surface-temp-erddap",
+            this.props.palettes.get("sea-surface-temp-erddap").get("values")
+        );
+        this.props.mapActions.setLayerActive(this.props.layer.get("id"), !active);
     }
 
     handleChangeSelect = key => event => {
@@ -156,7 +168,7 @@ export class LayerControlContainer extends LayerControlContainerCore {
     }
 
     renderMiddleContent() {
-        let parameterList = this.props.layer.getIn(["updateParameters", "facets"]);
+        let parameterList = this.props.layer.getIn(["updateParameters", "filters"]);
 
         let collapseClasses = MiscUtil.generateStringFromSet({
             [[displayStyles.hidden]]: parameterList.size === 0,

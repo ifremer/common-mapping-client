@@ -374,7 +374,7 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
              * Create URL with declared parameters
              */
             let url_date = layer.get("url").replace(/\{TIME_MAX\}/g, end_date_str);
-            layer.getIn(["updateParameters", "facets"]).forEach((value, key) => {
+            layer.getIn(["updateParameters", "filters"]).forEach((value, key) => {
                 if (key && value.get("value") !== undefined && value.get("value") !== "") {
                     url_date = url_date.concat("&", key, "=", value.get("value"));
                 }
@@ -398,7 +398,7 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
              */
             const bindParameter = layer.getIn([
                 "updateParameters",
-                "facets",
+                "filters",
                 layer.get("bind_parameter")
             ]);
             if (bindParameter && bindParameter.get("value")) {
