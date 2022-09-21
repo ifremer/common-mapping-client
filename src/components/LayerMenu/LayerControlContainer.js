@@ -151,6 +151,10 @@ export class LayerControlContainer extends LayerControlContainerCore {
         );
     }
 
+    renderSlider(key, parameter) {
+        // TODO
+    }
+
     renderMiddleContent() {
         let parameterList = this.props.layer.getIn(["updateParameters", "facets"]);
 

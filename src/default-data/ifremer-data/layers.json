@@ -15,12 +15,12 @@
             "updateParameters": {
                 "time": true,
                 "facets": {
-                   "selected_parameter" : { 
-                        "label": "Select parameter", 
+                   "selected_parameter" : {
+                        "label": "Select parameter",
                         "property":"selectedParameterMax",
-                        "value": "", 
+                        "value": "",
                         "list": [{"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":35},{"palette":"sea-surface-salinity","label":"Sea water salinity","code":30}],
-                        "type": "select" 
+                        "type": "select"
                     }
                 }
             },
@@ -42,166 +42,60 @@
             }
         },
         {
-            "id": "NRTOA_temp_WMTS",
-            "title": "(wmts) NRT insitu objective analysis : sea water temperature",
+            "id": "argo-eov-data",
+            "title": "Argo EOV data discovery",
             "type": "data",
-            "handleAs": "wmts_raster",
-            "mappingOptions": {
-                "matrixSet": "EPSG4326",
-                "url": "http://bluecloud.ifremer.fr/nexus/imaging/wmts",
-                "projection": "EPSG:4326",
-                "depth": 0.0,
-                "layer": "CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_TEMP",
-                "tileGrid": {
-                    "matrixIds": [0, 1, 2, 3, 4, 5],
-                    "tileSize": 512
-                },
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wmts",
-                    "cesium": "kvpTimeParam_wmts"
-                }
-            },
-            "palette": {
-                "handleAs": "image",
-                "url": "img/NRTOA_TEMP_colorbar.png"
-            }
-        },
-        {
-            "id": "NRTOA_temp",
-            "title": "NRT insitu objective analysis : sea water temperature",
-            "type": "data",
-            "handleAs": "wms_raster",
-            "timeFormat": "YYYY-MM-DDThh:mm:ss.SSSZ",
+            "handleAs": "vector_date_geojson",
+            "vectorStyle": "profile",
+            "url": "http://localhost:8080/api/eosc/geojson?start=998242907",
             "metadata": {
-                "url": "default-data/ifremer-data/layer-metadata/nrtoa.json",
+                "url": "default-data/ifremer-data/layer-metadata/argo_eov_data.json",
                 "handleAs": "json"
             },
-            "thumbnailImage": "img/nrtoa_thumbnail.png",
-            "mappingOptions": {
-                "url": "http://www.ifremer.fr/erddap/wms/CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_TEMP/request",
-                "projection": "EPSG:4326",
-                "width": 2048,
-                "depth": 0.0,
-                "layer": "CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_TEMP:TEMP",
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wms",
-                    "cesium": "kvpTimeParam_wms"
-                }
+            "thumbnailImage": "img/argo_discovery_thumbnail.png",
+            "updateParameters": {
+                "time": true,
+                "facets": {
+                    "parameter" : {
+                        "label": "Select parameter",
+                        "property":"parameter_value",
+                        "value": "35",
+                        "list": [
+                            {"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":35},
+                            {"palette":"sea-surface-salinity","label":"Sea water salinity","code":30}
+                        ],
+                        "type": "select"
+                    },
+                    "depth" : {
+                        "label": "Select depth",
+                        "property":"z_level",
+                        "value": "0",
+                        "list": [
+                            {"label":"Sea surface","code":0},
+                            {"label":"5 meters depth","code":5},
+                            {"label":"100 meters depth","code":100},
+                            {"label":"500 meters depth","code":500},
+                            {"label":"1000 meters depth","code":1000},
+                            {"label":"1500 meters depth","code":1500},
+                            {"label":"2000 meters depth","code":2000}
+                        ],
+                        "type": "select"
+                    }
+                 }
             },
-            "palette": {
-                "handleAs": "image",
-                "url": "img/NRTOA_TEMP_colorbar.png"
-            }
-        },
-        {
-            "id": "NRTOA_psal",
-            "title": "NRT insitu objective analysis : sea water salinity",
-            "type": "data",
-            "handleAs": "wms_raster",
-            "timeFormat": "YYYY-MM-DDThh:mm:ss.SSSZ",
-            "metadata": {
-                "url": "default-data/ifremer-data/layer-metadata/nrtoa.json",
-                "handleAs": "json"
-            },
-            "thumbnailImage": "img/nrtoa_thumbnail.png",
-            "mappingOptions": {
-                "url": "http://www.ifremer.fr/erddap/wms/CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_PSAL/request",
-                "projection": "EPSG:4326",
-                "width": 2048,
-                "depth": 0.0,
-                "layer": "CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_PSAL:PSAL",
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wms",
-                    "cesium": "kvpTimeParam_wms"
-                }
-            },
-            "palette": {
-                "handleAs": "image",
-                "url": "img/NRTOA_PSAL_colorbar.png"
-            }
-        },
-        {
-            "id": "IFR-L4-SSTfnd-ODYSSEA-GLOB_010",
-            "title": "Odyssea GHRSST Analysis",
-            "type": "data",
-            "handleAs": "wms_raster",
-            "timeFormat": "YYYY-MM-DDThh:mm:ssZ",
-            "metadata": {
-                "url": "default-data/ifremer-data/layer-metadata/odyssea.json",
-                "handleAs": "json"
-            },
-            "thumbnailImage": "img/odyssea_thumbnail.png",
-            "mappingOptions": {
-                "url": "http://www.ifremer.fr/erddap/wms/IFR-L4-SSTfnd-ODYSSEA-GLOB_010/request",
-                "projection": "EPSG:4326",
-                "layer": "IFR-L4-SSTfnd-ODYSSEA-GLOB_010:analysed_sst",
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wms",
-                    "cesium": "kvpTimeParam_wms"
-                }
-            },
-            "palette": {
-                "handleAs": "image",
-                "url": "img/IFR-L4-SSTfnd-ODYSSEA-GLOB_010_colorbar.png"
-            }
-        },
-        {
-            "id": "AMSR2_Surface_Precipitation_Rate_Day_EPSG4326",
-            "title": "Surface Precipitation Rate (Day, AMSR2, GCOM-W1)",
-            "type": "data",
-            "handleAs": "GIBS_raster",
-            "mappingOptions": {
-                "matrixSet": "2km",
-                "url": "https://map1a.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
-                "projection": "EPSG:4326",
-                "layer": "AMSR2_Surface_Precipitation_Rate_Day",
-                "tileGrid": {
-                    "matrixIds": [0, 1, 2, 3, 4, 5],
-                    "tileSize": 512
+            "mapping": {
+                "title": "platform_code",
+                "subtitle": "station_date",
+                "properties": {
+                    "parameter_code" : "Parameter code",
+                    "parameter_value": "Parameter value",
+                    "z_level": "depth level" ,
+                    "z_value": "real depth"
                 },
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wmts",
-                    "cesium": "kvpTimeParam_wmts"
-                }
-            }
-        },
-        {
-            "id": "GHRSST_L4MUR",
-            "title": "GHRSST L4MUR (Sea Surface Temperature)",
-            "type": "data",
-            "handleAs": "GIBS_raster",
-            "mappingOptions": {
-                "matrixSet": "1km",
-                "url": "https://gibs-c.earthdata.nasa.gov/wmts/epsg4326/best/wmts.cgi",
-                "projection": "EPSG:4326",
-                "layer": "GHRSST_L4_MUR_Sea_Surface_Temperature",
-                "tileGrid": {
-                    "matrixIds": [0, 1, 2, 3, 4, 5],
-                    "tileSize": 512
-                },
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wmts",
-                    "cesium": "kvpTimeParam_wmts"
-                }
-            }
-        },
-        {
-            "id": "AMSR2_Surface_Precipitation_Rate_Night_EPSG4326",
-            "title": "Surface Precipitation Rate (Night, AMSR2, GCOM-W1)",
-            "type": "data",
-            "handleAs": "GIBS_raster",
-            "mappingOptions": {
-                "matrixSet": "2km",
-                "url": "https://map1a.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
-                "projection": "EPSG:4326",
-                "layer": "AMSR2_Surface_Precipitation_Rate_Night",
-                "tileGrid": {
-                    "matrixIds": [0, 1, 2, 3, 4, 5],
-                    "tileSize": 512
-                },
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wmts",
-                    "cesium": "kvpTimeParam_wmts"
+                "data": {
+                    "label": "To profile data",
+                    "link": "https://co-insitucharts.ifremer.fr/station/{IDENTIFIER}/",
+                    "identifier": { "code": "station_id", "type": "number" }
                 }
             }
         },
