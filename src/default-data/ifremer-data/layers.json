@@ -53,6 +53,7 @@
                 "handleAs": "json"
             },
             "thumbnailImage": "img/argo_discovery_thumbnail.png",
+            "bindingParameter":"parameter",
             "updateParameters": {
                 "time": true,
                 "filters": {
