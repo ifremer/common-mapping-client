@@ -26,12 +26,13 @@ const APP_CONFIG = Immutable.fromJS({
                 type: "wmts/xml"
             },
             {
-                url: "default-data/ifremer-data/layers.json",
+                url: "default-data/eosc-data/layers.json",
                 type: "json"
             }
         ],
-        paletteConfig: "default-data/ifremer-data/palettes.json"
+        paletteConfig: "default-data/eosc-data/palettes.json"
     },
+    DATA_DIRECTORY: "default-data/eosc-data",
     /* MAP */
     VERTICAL_PROFILE_FILL_COLOR: "rgba(255,200,68, 1)",
     VERTICAL_PROFILE_STROKE_COLOR: "rgba(48, 48, 48, 1)",

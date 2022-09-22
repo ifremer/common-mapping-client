@@ -367,23 +367,34 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
 
             // retrieve again the end date because the moment.subtract method destroyed it !
             end_date = moment.utc(this.mapDate);
+            const start_date = moment(end_date).subtract(1, "month");
+            const end_date_str = end_date.format(layer.get("timeFormat"));
+            const start_date_str = start_date.format(layer.get("timeFormat"));
+            console.log(this.getExtent());
 
-            let end_date_str = end_date.format(layer.get("timeFormat"));
-
+            // end_date = moment.utc(this.mapDate);
+            // const start_date = moment(end_date).subtract(1, 'month');
+            // const end_date_str = end_date.unix();
+            // const start_date_str = start_date.unix();
+            // console.log(this.getExtent());
             /**
              * Create URL with declared parameters
              */
-            let url_date = layer.get("url").replace(/\{TIME_MAX\}/g, end_date_str);
+            let url = layer.get("url");
+            url = url.replace(/\{TIME_MIN\}/g, start_date_str);
+            url = url.replace(/\{TIME_MAX\}/g, end_date_str);
+            url = url.replace(/\{BOUNDING_BOX\}/g, this.getExtent());
+            // add filters from layer configurations to url
             layer.getIn(["updateParameters", "filters"]).forEach((value, key) => {
                 if (key && value.get("value") !== undefined && value.get("value") !== "") {
-                    url_date = url_date.concat("&", key, "=", value.get("value"));
+                    url = url.concat("&", key, "=", value.get("value"));
                 }
             });
 
             let layerSource = this.createLayerSource(
                 layer,
                 {
-                    url: url_date
+                    url: url
                 },
                 fromCache
             );
