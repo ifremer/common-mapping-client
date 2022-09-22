@@ -31,6 +31,25 @@ export class HelpContainer extends HelpContainerCore {
                 content: cvt.makeHtml(require("default-data/eosc-data/help/systemReqs.md"))
             }
         };
+        // TODO costumize datadir
+        // const datadir = appConfig.DATA_DIRECTORY || "default-data/_core_default-data";
+        // this.helpPageConfig = {
+        //     ABOUT: {
+        //         key: "ABOUT",
+        //         label: "About",
+        //         content: cvt.makeHtml(require(datadir +  "help/about.md"))
+        //     },
+        //     FAQ: {
+        //         key: "FAQ",
+        //         label: "FAQ",
+        //         content: cvt.makeHtml(require(datadir + "/help/faq.md"))
+        //     },
+        //     SYS_REQ: {
+        //         key: "SYS_REQ",
+        //         label: "System Requirements",
+        //         content: cvt.makeHtml(require(datadir + "/help/systemReqs.md"))
+        //     }
+        // };
     }
 }
 
