@@ -363,20 +363,20 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
      */
     createVectorDateLayer(layer, fromCache = true) {
         try {
-            let end_date = moment.utc(this.mapDate);
+            // let end_date = moment.utc(this.mapDate);
 
             // retrieve again the end date because the moment.subtract method destroyed it !
-            end_date = moment.utc(this.mapDate);
-            const start_date = moment(end_date).subtract(1, "month");
-            const end_date_str = end_date.format(layer.get("timeFormat"));
-            const start_date_str = start_date.format(layer.get("timeFormat"));
-            console.log(this.getExtent());
-
             // end_date = moment.utc(this.mapDate);
-            // const start_date = moment(end_date).subtract(1, 'month');
-            // const end_date_str = end_date.unix();
-            // const start_date_str = start_date.unix();
+            // const start_date = moment(end_date).subtract(1, "month");
+            // const end_date_str = end_date.format(layer.get("timeFormat"));
+            // const start_date_str = start_date.format(layer.get("timeFormat"));
             // console.log(this.getExtent());
+
+            const end_date = moment.utc(this.mapDate);
+            const start_date = moment(end_date).subtract(1, "month");
+            const end_date_str = end_date.unix();
+            const start_date_str = start_date.unix();
+            console.log(this.getExtent());
             /**
              * Create URL with declared parameters
              */

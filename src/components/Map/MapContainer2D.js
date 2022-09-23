@@ -41,6 +41,22 @@ export class MapContainer2D extends MapContainer2DCore {
         }
     }
 
+    handleMapMoveEnd(map) {
+        // Only fire move event if this map is active
+        // and target inactive map
+        if (map.isActive) {
+            this.props.mapActions.setMapView(
+                {
+                    extent: map.getExtent(),
+                    projection: map.getProjection()
+                },
+                false
+            );
+            // TODO manage to update URL when MapMoveEnd
+            // this.props.mapActionsIfr.updateUrlParameter(this.props.layer, key, event.target.value);
+        }
+    }
+
     render() {
         // need to get some sort of stored state value
         if (this.props.initialLoadComplete && !this.listenersInitialized) {
