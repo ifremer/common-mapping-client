@@ -422,7 +422,7 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
             const start_date = moment(end_date).subtract(1, "month");
             const end_date_str = end_date.unix();
             const start_date_str = start_date.unix();
-            console.log(this.getExtent());
+
             /**
              * Create URL with declared parameters
              */
@@ -455,6 +455,14 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
 
                 return layerSource;
             }
+
+            // TODO v2 overwrite handleMapMoveEnd here ?
+            // let origTileLoadFunc = mapLayer.imageryProvider.requestImage;
+            // mapLayer.imageryProvider._origTileLoadFunc = origTileLoadFunc;
+            // mapLayer.imageryProvider.requestImage = function(x, y, level, request) {
+            //     return _context.handleWMTSTileLoad(layer, mapLayer, x, y, level, request, this);
+            // };
+
             return false;
         } catch (err) {
             console.warn("Error in MapWrapperCesium.createVectorLayer:", err);

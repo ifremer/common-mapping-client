@@ -429,6 +429,13 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
                     extent: appConfig.DEFAULT_MAP_EXTENT
                 });
             }
+
+            // TODO v2 overwrite handleMapMoveEnd here ?
+            // let origTileLoadFunc = mapLayer.imageryProvider.requestImage;
+            // mapLayer.imageryProvider._origTileLoadFunc = origTileLoadFunc;
+            // mapLayer.imageryProvider.requestImage = function(x, y, level, request) {
+            //     return _context.handleWMTSTileLoad(layer, mapLayer, x, y, level, request, this);
+            // };
         } catch (err) {
             console.warn("Error in MapWrapperOpenlayers.createVectorLayer:", err);
             return false;
