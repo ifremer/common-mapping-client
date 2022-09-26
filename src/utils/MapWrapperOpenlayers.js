@@ -31,7 +31,6 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
     initStaticClasses(container, options) {
         MapWrapperOpenlayersCore.prototype.initStaticClasses.call(this, container, options);
         this.mapUtil = MapUtil;
-        // this.palettesOptions = options.get("palettes").toJS();
     }
 
     /**
@@ -519,7 +518,6 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
                 const parameterValue = feature.get(parameter.get("property"));
                 let style = this.getLayerStyle(layer.get("vectorStyle"), undefined);
                 if (parameterValue) {
-                    // const color = this.mapUtil.getFeatureColorFromPalette(this.palettesOptions[layer.getIn(["palette", "name"])],parseFloat(parameterValue));
                     const color = this.mapUtil.getFeatureColorFromPalette(
                         palette.toJS(),
                         parseFloat(parameterValue)

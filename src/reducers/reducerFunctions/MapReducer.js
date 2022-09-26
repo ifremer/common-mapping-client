@@ -105,14 +105,10 @@ export default class MapReducer extends MapReducerCore {
         ]);
 
         // update url
-        return this.updateLayerUrl(state, action);
+        return this.updateFilteredLayer(state, action);
     }
 
-    static updateLayerUrl(state, action) {
-        let anyMapFail = false;
-        let alerts = state.get("alerts");
-        let actionLayer = action.layer;
-
+    static updateFilteredLayer(state, action) {
         // TODO : improve and add again ? shortcut non-updates
         // if (
         //     action.value ===
@@ -122,18 +118,25 @@ export default class MapReducer extends MapReducerCore {
         // }
 
         //mise a jour du parametre
-        actionLayer = actionLayer.setIn(
+        action.layer = action.layer.setIn(
             ["updateParameters", "filters", action.parameter, "value"],
             action.value
         );
 
+        return this.updateLayer(state, action);
+    }
+
+    static updateLayer(state, action) {
+        let anyMapFail = false;
+        let alerts = state.get("alerts");
+        let actionLayer = action.layer;
+
         // update each map
         state.get("maps").forEach(map => {
-            if (
-                actionLayer.get("isActive") &&
-                actionLayer.getIn(["updateParameters", "filters", action.parameter])
-            ) {
-                map.clearCacheForLayer(actionLayer);
+            if (actionLayer.get("isActive")) {
+                if (actionLayer.getIn(["updateParameters", "filters", action.parameter])) {
+                    map.clearCacheForLayer(actionLayer);
+                }
                 // update the layer and track if any fail
                 if (!map.updateLayer(actionLayer)) {
                     let contextStr = map.is3D ? "3D" : "2D";
@@ -203,32 +206,23 @@ export default class MapReducer extends MapReducerCore {
 
     static mapMoveEnd(state, action) {
         let alerts = state.get("alerts");
-        let anyMapFail = false;
-        // update each map
-        state.get("maps").forEach(map => {
-            // update each layer on the map
-            state.get("layers").forEach(layerSection => {
-                layerSection.forEach(layer => {
-                    if (layer.get("isActive") && layer.get("updateParameters").get("bbox")) {
-                        const parameter = layer.get("bindingParameter");
-                        const value = layer.getIn([
-                            "updateParameters",
-                            "filters",
-                            parameter,
-                            "value"
-                        ]);
-                        const actionLayerUrl = {
-                            type: action.type,
-                            layer: layer,
-                            parameter: parameter,
-                            value: value
-                        };
-                        this.updateLayerUrl(state, actionLayerUrl);
-                    }
-                });
+        // update active layers on the map with bbox update parameter activated
+        state.get("layers").forEach(layerSection => {
+            layerSection.forEach(layer => {
+                if (layer.get("isActive") && layer.get("updateParameters").get("bbox")) {
+                    const parameter = layer.get("bindingParameter");
+                    const value = layer.getIn(["updateParameters", "filters", parameter, "value"]);
+                    const actionFilterLayer = {
+                        type: action.type,
+                        layer: layer,
+                        parameter: parameter,
+                        value: value
+                    };
+                    this.updateFilteredLayer(state, actionFilterLayer);
+                }
             });
         });
-        // return this.updateLayerUrl(state, action);
+
         return state.set("alerts", alerts);
     }
 }

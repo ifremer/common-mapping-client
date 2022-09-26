@@ -109,12 +109,12 @@ export class LayerControlContainer extends LayerControlContainerCore {
         if (key === bindingParameter) {
             this.setLayerDataBind(bindingParameter, event.target.value);
         } else {
-            this.props.mapActionsIfr.updateUrlParameter(this.props.layer, key, event.target.value);
+            this.props.mapActionsIfr.updateFilteredLayer(this.props.layer, key, event.target.value);
         }
     };
 
     handleChangeCheckbox(parameter, value) {
-        this.props.mapActionsIfr.updateUrlParameter(this.props.layer, parameter, value);
+        this.props.mapActionsIfr.updateFilteredLayer(this.props.layer, parameter, value);
     }
 
     renderCheckbox(key, parameter) {

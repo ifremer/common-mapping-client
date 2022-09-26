@@ -9,8 +9,8 @@ export default function map(state = mapState, action, opt_reducer = MapReducer) 
             return opt_reducer.pixelDrag(state, action);
         case actionTypes.MAP_MOVE_END:
             return opt_reducer.mapMoveEnd(state, action);
-        case actionTypes.UPDATE_URL_PARAMETER:
-            return opt_reducer.updateLayerUrl(state, action);
+        case actionTypes.UPDATE_FILTERED_LAYER:
+            return opt_reducer.updateFilteredLayer(state, action);
         case actionTypes.BIND_LAYER_DATA:
             return opt_reducer.bindLayerData(state, action);
         default:

@@ -9,8 +9,8 @@ export function mapMoveEnd() {
     return { type: types.MAP_MOVE_END };
 }
 
-export function updateUrlParameter(layer, parameter, value) {
-    return { type: types.UPDATE_URL_PARAMETER, layer, parameter, value };
+export function updateFilteredLayer(layer, parameter, value) {
+    return { type: types.UPDATE_FILTERED_LAYER, layer, parameter, value };
 }
 
 export function setLayerPalette(layer, paletteConfig) {
