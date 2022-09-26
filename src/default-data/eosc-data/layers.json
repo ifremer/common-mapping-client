@@ -42,12 +42,71 @@
             }
         },
         {
+            "id": "argo-eov-data-raster",
+            "title": "Argo EOV data discovery raster",
+            "type": "data",
+            "handleAs": "vector_geojson_raster",
+            "vectorStyle": "profile",
+            "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
+            "metadata": {
+                "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
+                "handleAs": "json"
+            },
+            "thumbnailImage": "img/argo_discovery_thumbnail.png",
+            "bindingParameter":"parameter",
+            "updateParameters": {
+                "time": true,
+                "filters": {
+                    "parameter" : {
+                        "label": "Select parameter",
+                        "property":"parameter_value",
+                        "value": "35",
+                        "list": [
+                            {"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":"35"},
+                            {"palette":"sea-surface-salinity","label":"Sea water salinity","code":"30"}
+                        ],
+                        "type": "select"
+                    },
+                    "depth" : {
+                        "label": "Select depth",
+                        "property":"z_level",
+                        "value": "0",
+                        "list": [
+                            {"label":"Sea surface","code":0},
+                            {"label":"5 meters depth","code":5},
+                            {"label":"100 meters depth","code":100},
+                            {"label":"500 meters depth","code":500},
+                            {"label":"1000 meters depth","code":1000},
+                            {"label":"1500 meters depth","code":1500},
+                            {"label":"2000 meters depth","code":2000}
+                        ],
+                        "type": "select"
+                    }
+                 }
+            },
+            "mapping": {
+                "title": "platform_code",
+                "subtitle": "station_date",
+                "properties": {
+                    "parameter_code" : "Parameter code",
+                    "parameter_value": "Parameter value",
+                    "z_level": "depth level" ,
+                    "z_value": "real depth"
+                },
+                "data": {
+                    "label": "To profile data",
+                    "link": "https://co-insitucharts.ifremer.fr/station/{IDENTIFIER}/",
+                    "identifier": { "code": "station_id", "type": "number" }
+                }
+            }
+        },
+        {
             "id": "argo-eov-data",
             "title": "Argo EOV data discovery",
             "type": "data",
             "handleAs": "vector_date_geojson",
             "vectorStyle": "profile",
-            "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
+            "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}",
             "metadata": {
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
                 "handleAs": "json"

@@ -205,6 +205,9 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
             case appStrings.LAYER_VECTOR_DATE_GEOJSON:
                 mapLayer = this.createVectorDateLayer(layer, fromCache);
                 break;
+            case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
+                mapLayer = this.createVectorRasterLayer(layer, fromCache);
+                break;
             case appStringsCore.LAYER_VECTOR_TOPOJSON:
                 mapLayer = this.createVectorLayer(layer, fromCache);
                 break;
@@ -267,6 +270,8 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
             case appStringsCore.LAYER_VECTOR_GEOJSON:
                 return this.createVectorGeojsonSource(layer, options);
             case appStrings.LAYER_VECTOR_DATE_GEOJSON:
+                return this.createVectorGeojsonSource(layer, options);
+            case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
                 return this.createVectorGeojsonSource(layer, options);
             case appStringsCore.LAYER_VECTOR_TOPOJSON:
                 return this.createVectorTopojsonSource(layer, options);
@@ -363,20 +368,82 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
      */
     createVectorDateLayer(layer, fromCache = true) {
         try {
-            // let end_date = moment.utc(this.mapDate);
-
-            // retrieve again the end date because the moment.subtract method destroyed it !
-            // end_date = moment.utc(this.mapDate);
-            // const start_date = moment(end_date).subtract(1, "month");
-            // const end_date_str = end_date.format(layer.get("timeFormat"));
-            // const start_date_str = start_date.format(layer.get("timeFormat"));
-            // console.log(this.getExtent());
-
             const end_date = moment.utc(this.mapDate);
             const start_date = moment(end_date).subtract(1, "month");
             const end_date_str = end_date.unix();
             const start_date_str = start_date.unix();
-            console.log(this.getExtent());
+            /**
+             * Create URL with declared parameters
+             */
+            let url = layer.get("url");
+            url = url.replace(/\{TIME_MIN\}/g, start_date_str);
+            url = url.replace(/\{TIME_MAX\}/g, end_date_str);
+            // add filters from layer configurations to url
+            layer.getIn(["updateParameters", "filters"]).forEach((value, key) => {
+                if (key && value.get("value") !== undefined && value.get("value") !== "") {
+                    url = url.concat("&", key, "=", value.get("value"));
+                }
+            });
+
+            let layerSource = this.createLayerSource(
+                layer,
+                {
+                    url: url
+                },
+                fromCache
+            );
+            if (layer.get("clusterVector")) {
+                layerSource = new Ol_Source_Cluster({
+                    source: layerSource
+                });
+            }
+
+            /**
+             * Define layer style according to data binding parameter
+             */
+            const bindParameter = layer.getIn([
+                "updateParameters",
+                "filters",
+                layer.get("bind_parameter")
+            ]);
+            if (bindParameter && bindParameter.get("value")) {
+                return new Ol_Layer_Vector({
+                    source: layerSource,
+                    opacity: layer.get("opacity"),
+                    visible: layer.get("isActive"),
+                    style: this.createVectorLayerStyle(layer, layer.get("palette"), bindParameter),
+                    extent: appConfig.DEFAULT_MAP_EXTENT
+                });
+            } else {
+                return new Ol_Layer_Vector({
+                    source: layerSource,
+                    opacity: layer.get("opacity"),
+                    visible: layer.get("isActive"),
+                    style: this.getLayerStyle(layer.get("vectorStyle")),
+                    extent: appConfig.DEFAULT_MAP_EXTENT
+                });
+            }
+        } catch (err) {
+            console.warn("Error in MapWrapperOpenlayers.createVectorLayer:", err);
+            return false;
+        }
+    }
+
+    /**
+     * create an openlayers vector layer
+     *
+     * @param {ImmutableJS.Map} layer layer object from map state in redux
+     * @param {boolean} [fromCache=true] true if the layer may be pulled from the cache
+     * @returns {object} openlayers vector layer
+     * @memberof MapWrapperOpenlayers
+     */
+    createVectorRasterLayer(layer, fromCache = true) {
+        try {
+            const end_date = moment.utc(this.mapDate);
+            // TODO : month should be configurable
+            const start_date = moment(end_date).subtract(1, "month");
+            const end_date_str = end_date.unix();
+            const start_date_str = start_date.unix();
             /**
              * Create URL with declared parameters
              */

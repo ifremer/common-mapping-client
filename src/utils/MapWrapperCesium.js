@@ -276,6 +276,8 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
                 return this.createVectorLayer(layer);
             case appStrings.LAYER_VECTOR_DATE_GEOJSON:
                 return this.createVectorDateLayer(layer);
+            case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
+                return this.createVectorRasterLayer(layer);
             case appStringsCore.LAYER_VECTOR_TOPOJSON:
                 return this.createVectorLayer(layer);
             case appStringsCore.LAYER_VECTOR_KML:
@@ -407,18 +409,62 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
      */
     createVectorDateLayer(layer, fromCache = true) {
         try {
-            // let end_date = moment.utc(this.mapDate);
-
-            // let end_date_str = end_date.format(layer.get("timeFormat"));
-
-            // let url_date = layer.get("url").replace(/\{TIME_MAX\}/g, end_date_str);
-            // layer.getIn(["updateParameters", "filters"]).forEach((value, key) => {
-            //     if (key && value.get("value") !== undefined && value.get("value") !== "") {
-            //         url_date = url_date.concat("&", key, "=", value.get("value"));
-            //     }
-            // });
-
             const end_date = moment.utc(this.mapDate);
+            // TODO : month should be configurable
+            const start_date = moment(end_date).subtract(1, "month");
+            const end_date_str = end_date.unix();
+            const start_date_str = start_date.unix();
+
+            /**
+             * Create URL with declared parameters
+             */
+            let url = layer.get("url");
+            url = url.replace(/\{TIME_MIN\}/g, start_date_str);
+            url = url.replace(/\{TIME_MAX\}/g, end_date_str);
+            // add filters from layer configurations to url
+            layer.getIn(["updateParameters", "filters"]).forEach((value, key) => {
+                if (key && value.get("value") !== undefined && value.get("value") !== "") {
+                    url = url.concat("&", key, "=", value.get("value"));
+                }
+            });
+
+            let options = { url: url };
+            let layerSource = this.createVectorSource(layer, options);
+
+            if (layerSource) {
+                // layer source is a promise that acts as a stand-in while the data loads
+                layerSource.then(mapLayer => {
+                    this.setLayerRefInfo(layer, mapLayer);
+                    this.setVectorLayerFeatureStyles(layer, layer.get("palette"), mapLayer);
+                    setTimeout(() => {
+                        this.setLayerOpacity(layer, layer.get("opacity"));
+                    }, 0);
+                });
+
+                // need to add custom metadata while data loads
+                this.setLayerRefInfo(layer, layerSource);
+
+                return layerSource;
+            }
+
+            return false;
+        } catch (err) {
+            console.warn("Error in MapWrapperCesium.createVectorLayer:", err);
+        }
+    }
+
+    /**
+     * create a vector cesium layer corresponding
+     * to the given layer
+     *
+     * @param {ImmutableJS.Map} layer layer object from map state in redux
+     * @returns {object|boolean} cesium layer object or false if it fails
+     * @memberof MapWrapperCesium
+     */
+    createVectorRasterLayer(layer, fromCache = true) {
+        try {
+            const end_date = moment.utc(this.mapDate);
+            // TODO : month should be configurable
             const start_date = moment(end_date).subtract(1, "month");
             const end_date_str = end_date.unix();
             const start_date_str = start_date.unix();
@@ -502,6 +548,8 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
                 return this.createGeoJsonSource(layer, options);
             case appStrings.LAYER_VECTOR_DATE_GEOJSON:
                 return this.createGeoJsonSource(layer, options);
+            case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
+                return this.createGeoJsonSource(layer, options);
             case appStringsCore.LAYER_VECTOR_TOPOJSON:
                 return this.createGeoJsonSource(layer, options);
             case appStringsCore.LAYER_VECTOR_KML:
@@ -529,6 +577,8 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
             case appStringsCore.LAYER_VECTOR_GEOJSON:
                 return this.map.dataSources;
             case appStrings.LAYER_VECTOR_DATE_GEOJSON:
+                return this.map.dataSources;
+            case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
                 return this.map.dataSources;
             case appStringsCore.LAYER_VECTOR_TOPOJSON:
                 return this.map.dataSources;
