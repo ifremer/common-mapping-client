@@ -52,8 +52,8 @@ export class MapContainer3D extends MapContainer3DCore {
                 },
                 false
             );
-            // TODO manage to update URL when MapMoveEnd
-            // this.props.mapActionsIfr.updateUrlParameter(this.props.layer, key, event.target.value);
+            // Manage to update URL when MapMoveEnd
+            this.props.mapActionsIfr.mapMoveEnd();
         }
     }
 

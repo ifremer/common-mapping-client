@@ -8,7 +8,6 @@
 export const LAYER_URL_PARAMETER_CHECKBOX = "checkbox";
 export const LAYER_URL_PARAMETER_SELECT = "select";
 
-export const LAYER_VECTOR_DATE_GEOJSON = "vector_date_geojson";
 export const LAYER_VECTOR_GEOJSON_RASTER = "vector_geojson_raster";
 
 export const VECTOR_STYLE_VERTICAL_PROFILE = "profile";

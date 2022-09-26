@@ -274,8 +274,6 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
                 return this.createWMTSLayer(layer);
             case appStringsCore.LAYER_VECTOR_GEOJSON:
                 return this.createVectorLayer(layer);
-            case appStrings.LAYER_VECTOR_DATE_GEOJSON:
-                return this.createVectorDateLayer(layer);
             case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
                 return this.createVectorRasterLayer(layer);
             case appStringsCore.LAYER_VECTOR_TOPOJSON:
@@ -546,8 +544,6 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
         switch (layer.get("handleAs")) {
             case appStringsCore.LAYER_VECTOR_GEOJSON:
                 return this.createGeoJsonSource(layer, options);
-            case appStrings.LAYER_VECTOR_DATE_GEOJSON:
-                return this.createGeoJsonSource(layer, options);
             case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
                 return this.createGeoJsonSource(layer, options);
             case appStringsCore.LAYER_VECTOR_TOPOJSON:
@@ -575,8 +571,6 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
             case appStringsCore.LAYER_XYZ_RASTER:
                 return this.map.imageryLayers;
             case appStringsCore.LAYER_VECTOR_GEOJSON:
-                return this.map.dataSources;
-            case appStrings.LAYER_VECTOR_DATE_GEOJSON:
                 return this.map.dataSources;
             case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
                 return this.map.dataSources;

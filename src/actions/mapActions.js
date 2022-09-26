@@ -5,6 +5,10 @@ export function pixelDrag(clickEvt) {
     return { type: types.PIXEL_DRAG, clickEvt };
 }
 
+export function mapMoveEnd() {
+    return { type: types.MAP_MOVE_END };
+}
+
 export function updateUrlParameter(layer, parameter, value) {
     return { type: types.UPDATE_URL_PARAMETER, layer, parameter, value };
 }

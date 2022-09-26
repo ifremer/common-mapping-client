@@ -202,9 +202,6 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
             case appStringsCore.LAYER_VECTOR_GEOJSON:
                 mapLayer = this.createVectorLayer(layer, fromCache);
                 break;
-            case appStrings.LAYER_VECTOR_DATE_GEOJSON:
-                mapLayer = this.createVectorDateLayer(layer, fromCache);
-                break;
             case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
                 mapLayer = this.createVectorRasterLayer(layer, fromCache);
                 break;
@@ -268,8 +265,6 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
             case appStringsCore.LAYER_WMS_RASTER:
                 return this.createWMSSource(layer, options);
             case appStringsCore.LAYER_VECTOR_GEOJSON:
-                return this.createVectorGeojsonSource(layer, options);
-            case appStrings.LAYER_VECTOR_DATE_GEOJSON:
                 return this.createVectorGeojsonSource(layer, options);
             case appStrings.LAYER_VECTOR_GEOJSON_RASTER:
                 return this.createVectorGeojsonSource(layer, options);

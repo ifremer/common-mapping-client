@@ -4,7 +4,7 @@
             "id": "argo-discovery",
             "title": "Argo discovery",
             "type": "data",
-            "handleAs": "vector_date_geojson",
+            "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
             "url": "http://bluecloud.odatis-ocean.fr/argo/api/monthly_argo_data?end_date={TIME_MAX}&output_format=geojson",
             "metadata": {
@@ -56,6 +56,7 @@
             "bindingParameter":"parameter",
             "updateParameters": {
                 "time": true,
+                "bbox": true,
                 "filters": {
                     "parameter" : {
                         "label": "Select parameter",
@@ -104,7 +105,7 @@
             "id": "argo-eov-data",
             "title": "Argo EOV data discovery",
             "type": "data",
-            "handleAs": "vector_date_geojson",
+            "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
             "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}",
             "metadata": {

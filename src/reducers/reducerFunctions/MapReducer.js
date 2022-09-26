@@ -200,4 +200,35 @@ export default class MapReducer extends MapReducerCore {
 
         return state.setIn(["layers", actionLayer.get("type"), actionLayer.get("id")], newLayer);
     }
+
+    static mapMoveEnd(state, action) {
+        let alerts = state.get("alerts");
+        let anyMapFail = false;
+        // update each map
+        state.get("maps").forEach(map => {
+            // update each layer on the map
+            state.get("layers").forEach(layerSection => {
+                layerSection.forEach(layer => {
+                    if (layer.get("isActive") && layer.get("updateParameters").get("bbox")) {
+                        const parameter = layer.get("bindingParameter");
+                        const value = layer.getIn([
+                            "updateParameters",
+                            "filters",
+                            parameter,
+                            "value"
+                        ]);
+                        const actionLayerUrl = {
+                            type: action.type,
+                            layer: layer,
+                            parameter: parameter,
+                            value: value
+                        };
+                        this.updateLayerUrl(state, actionLayerUrl);
+                    }
+                });
+            });
+        });
+        // return this.updateLayerUrl(state, action);
+        return state.set("alerts", alerts);
+    }
 }
