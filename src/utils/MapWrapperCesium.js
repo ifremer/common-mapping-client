@@ -405,64 +405,10 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
      * @returns {object|boolean} cesium layer object or false if it fails
      * @memberof MapWrapperCesium
      */
-    createVectorDateLayer(layer, fromCache = true) {
-        try {
-            const end_date = moment.utc(this.mapDate);
-            // TODO : month should be configurable
-            const start_date = moment(end_date).subtract(1, "month");
-            const end_date_str = end_date.unix();
-            const start_date_str = start_date.unix();
-
-            /**
-             * Create URL with declared parameters
-             */
-            let url = layer.get("url");
-            url = url.replace(/\{TIME_MIN\}/g, start_date_str);
-            url = url.replace(/\{TIME_MAX\}/g, end_date_str);
-            // add filters from layer configurations to url
-            layer.getIn(["updateParameters", "filters"]).forEach((value, key) => {
-                if (key && value.get("value") !== undefined && value.get("value") !== "") {
-                    url = url.concat("&", key, "=", value.get("value"));
-                }
-            });
-
-            let options = { url: url };
-            let layerSource = this.createVectorSource(layer, options);
-
-            if (layerSource) {
-                // layer source is a promise that acts as a stand-in while the data loads
-                layerSource.then(mapLayer => {
-                    this.setLayerRefInfo(layer, mapLayer);
-                    this.setVectorLayerFeatureStyles(layer, layer.get("palette"), mapLayer);
-                    setTimeout(() => {
-                        this.setLayerOpacity(layer, layer.get("opacity"));
-                    }, 0);
-                });
-
-                // need to add custom metadata while data loads
-                this.setLayerRefInfo(layer, layerSource);
-
-                return layerSource;
-            }
-
-            return false;
-        } catch (err) {
-            console.warn("Error in MapWrapperCesium.createVectorLayer:", err);
-        }
-    }
-
-    /**
-     * create a vector cesium layer corresponding
-     * to the given layer
-     *
-     * @param {ImmutableJS.Map} layer layer object from map state in redux
-     * @returns {object|boolean} cesium layer object or false if it fails
-     * @memberof MapWrapperCesium
-     */
     createVectorRasterLayer(layer, fromCache = true) {
         try {
             const end_date = moment.utc(this.mapDate);
-            // TODO : month should be configurable
+            // TODO : Date string format en substract month number should be configurable
             const start_date = moment(end_date).subtract(1, "month");
             const end_date_str = end_date.unix();
             const start_date_str = start_date.unix();

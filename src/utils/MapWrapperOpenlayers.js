@@ -360,81 +360,10 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
      * @returns {object} openlayers vector layer
      * @memberof MapWrapperOpenlayers
      */
-    createVectorDateLayer(layer, fromCache = true) {
-        try {
-            const end_date = moment.utc(this.mapDate);
-            const start_date = moment(end_date).subtract(1, "month");
-            const end_date_str = end_date.unix();
-            const start_date_str = start_date.unix();
-            /**
-             * Create URL with declared parameters
-             */
-            let url = layer.get("url");
-            url = url.replace(/\{TIME_MIN\}/g, start_date_str);
-            url = url.replace(/\{TIME_MAX\}/g, end_date_str);
-            // add filters from layer configurations to url
-            layer.getIn(["updateParameters", "filters"]).forEach((value, key) => {
-                if (key && value.get("value") !== undefined && value.get("value") !== "") {
-                    url = url.concat("&", key, "=", value.get("value"));
-                }
-            });
-
-            let layerSource = this.createLayerSource(
-                layer,
-                {
-                    url: url
-                },
-                fromCache
-            );
-            if (layer.get("clusterVector")) {
-                layerSource = new Ol_Source_Cluster({
-                    source: layerSource
-                });
-            }
-
-            /**
-             * Define layer style according to data binding parameter
-             */
-            const bindParameter = layer.getIn([
-                "updateParameters",
-                "filters",
-                layer.get("bind_parameter")
-            ]);
-            if (bindParameter && bindParameter.get("value")) {
-                return new Ol_Layer_Vector({
-                    source: layerSource,
-                    opacity: layer.get("opacity"),
-                    visible: layer.get("isActive"),
-                    style: this.createVectorLayerStyle(layer, layer.get("palette"), bindParameter),
-                    extent: appConfig.DEFAULT_MAP_EXTENT
-                });
-            } else {
-                return new Ol_Layer_Vector({
-                    source: layerSource,
-                    opacity: layer.get("opacity"),
-                    visible: layer.get("isActive"),
-                    style: this.getLayerStyle(layer.get("vectorStyle")),
-                    extent: appConfig.DEFAULT_MAP_EXTENT
-                });
-            }
-        } catch (err) {
-            console.warn("Error in MapWrapperOpenlayers.createVectorLayer:", err);
-            return false;
-        }
-    }
-
-    /**
-     * create an openlayers vector layer
-     *
-     * @param {ImmutableJS.Map} layer layer object from map state in redux
-     * @param {boolean} [fromCache=true] true if the layer may be pulled from the cache
-     * @returns {object} openlayers vector layer
-     * @memberof MapWrapperOpenlayers
-     */
     createVectorRasterLayer(layer, fromCache = true) {
         try {
             const end_date = moment.utc(this.mapDate);
-            // TODO : month should be configurable
+            // TODO : Date string format en substract month number should be configurable
             const start_date = moment(end_date).subtract(1, "month");
             const end_date_str = end_date.unix();
             const start_date_str = start_date.unix();

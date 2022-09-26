@@ -1,53 +1,13 @@
 {
     "layers": [
         {
-            "id": "argo-discovery",
-            "title": "Argo discovery",
-            "type": "data",
-            "handleAs": "vector_geojson_raster",
-            "vectorStyle": "profile",
-            "url": "http://bluecloud.odatis-ocean.fr/argo/api/monthly_argo_data?end_date={TIME_MAX}&output_format=geojson",
-            "metadata": {
-                "url": "default-data/eosc-data/layer-metadata/argo_discovery.json",
-                "handleAs": "json"
-            },
-            "thumbnailImage": "img/argo_discovery_thumbnail.png",
-            "updateParameters": {
-                "time": true,
-                "filters": {
-                   "selected_parameter" : {
-                        "label": "Select parameter",
-                        "property":"selectedParameterMax",
-                        "value": "",
-                        "list": [{"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":35},{"palette":"sea-surface-salinity","label":"Sea water salinity","code":30}],
-                        "type": "select"
-                    }
-                }
-            },
-            "mapping": {
-                "title": "platformCode",
-                "subtitle": "dateEnd",
-                "properties": {
-                    "platformCode" : "Platform code",
-                    "platformDescription": "Platform description",
-                    "platformName": "Platform name" ,
-                    "platformType": "Platform type",
-                    "parameterDescription": ["Parameter code", "description", "max", "min", "qc", "unit"]
-                },
-                "data": {
-                    "label": "To profile data",
-                    "link": "https://co-insitucharts.ifremer.fr/station/{IDENTIFIER}/",
-                    "identifier": { "code": "stationIds", "type": "array" }
-                }
-            }
-        },
-        {
             "id": "argo-eov-data-raster",
-            "title": "Argo EOV data discovery raster",
+            "title": "Argo EOV data discovery (dynamic)",
             "type": "data",
             "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
             "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
+            "timeFormat": "YYYY-MM-DD",
             "metadata": {
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
                 "handleAs": "json"

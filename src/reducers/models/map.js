@@ -26,5 +26,5 @@ export const layerModel = layerModelCore.mergeDeep({
         properties: {},
         data: undefined
     },
-    updateParameters: { time: true, filters: {} }
+    updateParameters: { time: false, bbox: false, filters: {} }
 });
