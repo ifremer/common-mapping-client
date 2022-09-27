@@ -300,10 +300,10 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
     createVectorRasterLayer(layer, fromCache = true) {
         try {
             const end_date = moment.utc(this.mapDate);
-            // TODO : Date string format en substract month number should be configurable
+            // TODO : Substract month number should be configurable
             const start_date = moment(end_date).subtract(1, "month");
-            const end_date_str = end_date.unix();
-            const start_date_str = start_date.unix();
+            const end_date_str = end_date.format(layer.get("timeFormat"));
+            const start_date_str = start_date.format(layer.get("timeFormat"));
 
             /**
              * Create URL with declared parameters
@@ -337,13 +337,6 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
 
                 return layerSource;
             }
-
-            // TODO v2 overwrite handleMapMoveEnd here ?
-            // let origTileLoadFunc = mapLayer.imageryProvider.requestImage;
-            // mapLayer.imageryProvider._origTileLoadFunc = origTileLoadFunc;
-            // mapLayer.imageryProvider.requestImage = function(x, y, level, request) {
-            //     return _context.handleWMTSTileLoad(layer, mapLayer, x, y, level, request, this);
-            // };
 
             return false;
         } catch (err) {

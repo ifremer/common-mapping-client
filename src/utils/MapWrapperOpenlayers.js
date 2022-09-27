@@ -317,12 +317,10 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
     createVectorRasterLayer(layer, fromCache = true) {
         try {
             const end_date = moment.utc(this.mapDate);
-            // TODO : Date string format en substract month number should be configurable
+            // TODO : Substract month number should be configurable
             const start_date = moment(end_date).subtract(1, "month");
             const end_date_str = end_date.format(layer.get("timeFormat"));
             const start_date_str = start_date.format(layer.get("timeFormat"));
-            // const end_date_str = end_date.unix();
-            // const start_date_str = start_date.unix();
             /**
              * Create URL with declared parameters
              */
