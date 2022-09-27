@@ -48,7 +48,7 @@
             "handleAs": "wmts_raster",
             "mappingOptions": {
                 "matrixSet": "EPSG4326",
-                "url": "http://bluecloud.ifremer.fr/nexus/imaging/wmts",
+                "url": "https://bluecloud.ifremer.fr/nexus/imaging/wmts",
                 "projection": "EPSG:4326",
                 "depth": 0.0,
                 "layer": "CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_TEMP",
@@ -78,7 +78,7 @@
             },
             "thumbnailImage": "img/nrtoa_thumbnail.png",
             "mappingOptions": {
-                "url": "http://www.ifremer.fr/erddap/wms/CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_TEMP/request",
+                "url": "https://www.ifremer.fr/erddap/wms/CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_TEMP/request",
                 "projection": "EPSG:4326",
                 "width": 2048,
                 "depth": 0.0,
@@ -105,7 +105,7 @@
             },
             "thumbnailImage": "img/nrtoa_thumbnail.png",
             "mappingOptions": {
-                "url": "http://www.ifremer.fr/erddap/wms/CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_PSAL/request",
+                "url": "https://www.ifremer.fr/erddap/wms/CORIOLIS_GLOBAL_NRTOA_OBS_TIME_SERIE_PSAL/request",
                 "projection": "EPSG:4326",
                 "width": 2048,
                 "depth": 0.0,
@@ -132,7 +132,7 @@
             },
             "thumbnailImage": "img/odyssea_thumbnail.png",
             "mappingOptions": {
-                "url": "http://www.ifremer.fr/erddap/wms/IFR-L4-SSTfnd-ODYSSEA-GLOB_010/request",
+                "url": "https://www.ifremer.fr/erddap/wms/IFR-L4-SSTfnd-ODYSSEA-GLOB_010/request",
                 "projection": "EPSG:4326",
                 "layer": "IFR-L4-SSTfnd-ODYSSEA-GLOB_010:analysed_sst",
                 "urlFunctions": {
@@ -231,7 +231,7 @@
                 "projection": "EPSG:4326",
                 "layer": "ESRI_World_Imagery",
                 "url":
-                    "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
+                    "https://wi.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.pbf",
                 "tileGrid": {
                     "minZoom": 1,
                     "maxZoom": 16,
