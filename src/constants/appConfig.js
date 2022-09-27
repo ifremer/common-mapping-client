@@ -21,8 +21,7 @@ const APP_CONFIG = Immutable.fromJS({
     URLS: {
         layerConfig: [
             {
-                url:
-                    "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+                url: "default-data/_core_default-data/capabilities.xml",
                 type: "wmts/xml"
             },
             {

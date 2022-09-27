@@ -7,7 +7,7 @@
             "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
             "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
-            "timeFormat": "YYYY-MM-DD",
+            "timeFormat": "X",
             "metadata": {
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
                 "handleAs": "json"
@@ -68,6 +68,7 @@
             "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
             "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}",
+            "timeFormat": "X",
             "metadata": {
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
                 "handleAs": "json"
@@ -121,6 +122,26 @@
             }
         },
         {
+            "id": "GHRSST_L4MUR",
+            "title": "GHRSST L4MUR (Sea Surface Temperature)",
+            "type": "data",
+            "handleAs": "GIBS_raster",
+            "mappingOptions": {
+                "matrixSet": "1km",
+                "url": "https://gibs-c.earthdata.nasa.gov/wmts/epsg4326/best/wmts.cgi",
+                "projection": "EPSG:4326",
+                "layer": "GHRSST_L4_MUR_Sea_Surface_Temperature",
+                "tileGrid": {
+                    "matrixIds": [0, 1, 2, 3, 4, 5],
+                    "tileSize": 512
+                },
+                "urlFunctions": {
+                    "openlayers": "kvpTimeParam_wmts",
+                    "cesium": "kvpTimeParam_wmts"
+                }
+            }
+        },
+        {
             "id": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
             "title": "True Color",
             "type": "data",
@@ -137,54 +158,6 @@
                 "handleAs": "json"
             },
             "thumbnailImage": "img/VIIRS_SNPP_CorrectedReflectance_TrueColor.png"
-        },
-        {
-            "id": "AMSR2_Sea_Ice_Brightness_Temp_6km_89H",
-            "title": "Sea Ice Extent",
-            "type": "data",
-            "handleAs": "GIBS_raster",
-            "min": 80,
-            "max": 320,
-            "units": "°K",
-            "mappingOptions": {
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wmts",
-                    "cesium": "kvpTimeParam_wmts"
-                }
-            },
-            "metadata": {
-                "url": "default-data/_core_default-data/layer-metadata/AMSR2_Sea_Ice_Brightness_Temp_6km_89H.json",
-                "handleAs": "json"
-            },
-            "palette": {
-                "name": "sea-ice-extent",
-                "handleAs": "json-fixed"
-            },
-            "thumbnailImage": "img/AMSR2_Sea_Ice_Brightness_Temp_6km_89H.png"
-        },
-        {
-            "id": "GHRSST_L4_G1SST_Sea_Surface_Temperature",
-            "title": "Sea Surface Temperature",
-            "type": "data",
-            "handleAs": "GIBS_raster",
-            "min": 0.0,
-            "max": 32.0,
-            "units": "˚C",
-            "mappingOptions": {
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wmts",
-                    "cesium": "kvpTimeParam_wmts"
-                }
-            },
-            "metadata": {
-                "url": "default-data/_core_default-data/layer-metadata/GHRSST_L4_G1SST_Sea_Surface_Temperature.json",
-                "handleAs": "json"
-            },
-            "palette": {
-                "name": "GIBS_SST",
-                "handleAs": "json-fixed"
-            },
-            "thumbnailImage": "img/GHRSST_L4_G1SST_Sea_Surface_Temperature.png"
         },
         {
             "id": "MODIS_Terra_Brightness_Temp_Band31_Day",
@@ -209,36 +182,6 @@
                 "handleAs": "json-fixed"
             },
             "thumbnailImage": "img/MODIS_Terra_Brightness_Temp_Band31_Day.png"
-        },
-        {
-            "id": "us_state_outline_topojson",
-            "title": "US State Outline",
-            "type": "data",
-            "handleAs": "vector_topojson",
-            "updateParameters": {
-                "time": false
-            },
-            "url": "default-data/_core_default-data/ne_10m_us_states.topojson",
-            "metadata": {
-                "url": "default-data/_core_default-data/layer-metadata/us_state_outline_topojson.json",
-                "handleAs": "json"
-            },
-            "thumbnailImage": "img/us_state_outline_topojson.png"
-        },
-        {
-            "id": "flight_paths_kml",
-            "title": "Flight Paths",
-            "type": "data",
-            "handleAs": "vector_kml",
-            "updateParameters": {
-                "time": false
-            },
-            "url": "default-data/_core_default-data/openflights-sample.kml",
-            "metadata": {
-                "url": "default-data/_core_default-data/layer-metadata/flight_paths_kml.json",
-                "handleAs": "json"
-            },
-            "thumbnailImage": "img/flight_paths_kml.png"
         },
         {
             "id": "Reference_Labels",

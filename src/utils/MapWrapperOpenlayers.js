@@ -307,52 +307,6 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
     }
 
     /**
-     * create an openlayers wms raster layer
-     *
-     * @param {ImmutableJS.Map} layer layer object from map state in redux
-     * @param {boolean} [fromCache=true] true if the layer may be pulled from the cache
-     * @returns {object|boolean} openlayers layer wms layer object or false if it fails
-     * @memberof MapWrapperOpenlayers
-     */
-    createWMSLayer(layer, fromCache) {
-        try {
-            if (layer && layer.get("mappingOptions")) {
-                let options = layer.get("mappingOptions").toJS();
-
-                //                console.debug("options : ");
-                //                console.debug(options);
-
-                let layerSource = this.createLayerSource(layer, options, fromCache);
-
-                //                console.debug("layer source :");
-                //                console.debug(layerSource);
-
-                let mapLayer = new Ol_Layer_Image({
-                    opacity: layer.get("opacity"),
-                    visible: layer.get("isActive"),
-                    source: layerSource,
-                    extent: appConfig.DEFAULT_MAP_EXTENT
-                });
-
-                this.setWMSLayerOverrides(layer, mapLayer, layerSource);
-
-                //                console.debug("maplayer after override :");
-                //                console.debug(mapLayer);
-                //
-                //                console.debug("trying to change max res: ");
-                mapLayer.maxResolution = options.width;
-                //                console.debug(mapLayer);
-
-                return mapLayer;
-            }
-            return false;
-        } catch (err) {
-            console.warn("Error in MapWrapperOpenlayers.createWMSLayer:", err);
-            return false;
-        }
-    }
-
-    /**
      * create an openlayers vector layer
      *
      * @param {ImmutableJS.Map} layer layer object from map state in redux
@@ -365,8 +319,10 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
             const end_date = moment.utc(this.mapDate);
             // TODO : Date string format en substract month number should be configurable
             const start_date = moment(end_date).subtract(1, "month");
-            const end_date_str = end_date.unix();
-            const start_date_str = start_date.unix();
+            const end_date_str = end_date.format(layer.get("timeFormat"));
+            const start_date_str = start_date.format(layer.get("timeFormat"));
+            // const end_date_str = end_date.unix();
+            // const start_date_str = start_date.unix();
             /**
              * Create URL with declared parameters
              */
@@ -419,13 +375,6 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
                     extent: appConfig.DEFAULT_MAP_EXTENT
                 });
             }
-
-            // TODO v2 overwrite handleMapMoveEnd here ?
-            // let origTileLoadFunc = mapLayer.imageryProvider.requestImage;
-            // mapLayer.imageryProvider._origTileLoadFunc = origTileLoadFunc;
-            // mapLayer.imageryProvider.requestImage = function(x, y, level, request) {
-            //     return _context.handleWMTSTileLoad(layer, mapLayer, x, y, level, request, this);
-            // };
         } catch (err) {
             console.warn("Error in MapWrapperOpenlayers.createVectorLayer:", err);
             return false;
