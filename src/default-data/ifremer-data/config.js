@@ -49,10 +49,11 @@ APPLICATION_CONFIG = {
                 type: "wmts/xml"
             },
             {
-                url: "default-data/eosc-data/layers.json",
+                url: "default-data/ifremer-data/layers.json",
                 type: "json"
             }
         ],
-        paletteConfig: "default-data/eosc-data/palettes.json"
-    }
+        paletteConfig: "default-data/ifremer-data/palettes.json"
+    },
+    DATA_DIRECTORY: "default-data/ifremer-data"
 };

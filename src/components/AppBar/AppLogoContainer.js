@@ -12,8 +12,7 @@ import { connect } from "react-redux";
 
 export class AppTitleContainer extends Component {
     render() {
-        // let { title, subtitle, className, ...other } = this.props;
-        return <img className={styles.logo} src={this.props.logo} width="90" />;
+        return <img className={styles.logo} src={this.props.logo} height="30" />;
     }
 }
 

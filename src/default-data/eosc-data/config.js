@@ -54,5 +54,6 @@ APPLICATION_CONFIG = {
             }
         ],
         paletteConfig: "default-data/eosc-data/palettes.json"
-    }
+    },
+    DATA_DIRECTORY: "default-data/eosc-data"
 };

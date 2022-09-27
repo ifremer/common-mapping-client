@@ -38,7 +38,6 @@ APPLICATION_CONFIG = {
 ```
 
 */
-
 APPLICATION_CONFIG = {
     APP_TITLE: "Argo Marine data discovery",
     APP_LOGO: "img/eosc-future.svg",

@@ -48,6 +48,7 @@ require("styles/resources/img/logo/eosc-hub-web_favicon.png");
 require("styles/resources/img/logo/logo_Ifremer_43x120.png");
 require("styles/resources/img/logo/logo_Ifremer.png");
 require("styles/resources/img/logo/in2p3_120x120.jpg");
+require("styles/resources/img/logo/eosc-future.svg");
 
 const store = configureStore();
 

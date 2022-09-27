@@ -19,7 +19,7 @@
                         "label": "Select parameter",
                         "property":"selectedParameterMax",
                         "value": "",
-                        "list": [{"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":35},{"palette":"sea-surface-salinity","label":"Sea water salinity","code":30}],
+                        "list": [{"palette":"sea-surface-temp-ifremer", "label":"Sea water temperature","code":35},{"palette":"sea-surface-psal-ifremer","label":"Sea water salinity","code":30}],
                         "type": "select"
                     }
                 }

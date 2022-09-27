@@ -16,8 +16,6 @@ const OPS_CONFIG = Immutable.fromJS(window.APPLICATION_CONFIG);
 
 // define your overrides for Core config here
 const APP_CONFIG = Immutable.fromJS({
-    APP_TITLE: "EOSC Argo Marine data discovery",
-    APP_LOGO: "img/eosc-hub-web.png",
     URLS: {
         layerConfig: [
             {
@@ -25,13 +23,33 @@ const APP_CONFIG = Immutable.fromJS({
                 type: "wmts/xml"
             },
             {
-                url: "default-data/ifremer-data/layers.json",
+                url: "default-data/_core_default-data/layers.json",
                 type: "json"
             }
         ],
-        paletteConfig: "default-data/ifremer-data/palettes.json"
+        paletteConfig: "default-data/_core_default-data/palettes.json"
     },
-    DATA_DIRECTORY: "default-data/ifremer-data",
+    DATA_DIRECTORY: "default-data/_core_default-data",
+    ABOUT_MARKDOWN: require("default-data/_core_default-data/help/about.md"),
+    FAQ_MARKDOWN: require("default-data/_core_default-data/help/about.md"),
+    SYSTEM_REQS_MARKDOWN: require("default-data/_core_default-data/help/about.md"),
+    // URLS: {
+    //     layerConfig: [
+    //         {
+    //             url: "default-data/_core_default-data/capabilities.xml",
+    //             type: "wmts/xml"
+    //         },
+    //         {
+    //             url: "default-data/eosc-data/layers.json",
+    //             type: "json"
+    //         }
+    //     ],
+    //     paletteConfig: "default-data/eosc-data/palettes.json"
+    // },
+    // DATA_DIRECTORY: "default-data/eosc-data",
+    // ABOUT_MARKDOWN: require("default-data/eosc-data/help/about.md"),
+    // FAQ_MARKDOWN: require("default-data/eosc-data/help/about.md"),
+    // SYSTEM_REQS_MARKDOWN: require("default-data/eosc-data/help/about.md"),
     /* MAP */
     VERTICAL_PROFILE_FILL_COLOR: "rgba(255,200,68, 1)",
     VERTICAL_PROFILE_STROKE_COLOR: "rgba(48, 48, 48, 1)",

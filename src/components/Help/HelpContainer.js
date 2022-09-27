@@ -1,3 +1,4 @@
+import appConfig from "constants/appConfig";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -18,36 +19,36 @@ export class HelpContainer extends HelpContainerCore {
             ABOUT: {
                 key: "ABOUT",
                 label: "About",
-                content: cvt.makeHtml(require("default-data/eosc-data/help/about.md"))
+                content: cvt.makeHtml(require("default-data/_core_default-data/help/about.md"))
             },
             FAQ: {
                 key: "FAQ",
                 label: "FAQ",
-                content: cvt.makeHtml(require("default-data/eosc-data/help/faq.md"))
+                content: cvt.makeHtml(require("default-data/_core_default-data/help/faq.md"))
             },
             SYS_REQ: {
                 key: "SYS_REQ",
                 label: "System Requirements",
-                content: cvt.makeHtml(require("default-data/eosc-data/help/systemReqs.md"))
+                content: cvt.makeHtml(require("default-data/_core_default-data/help/systemReqs.md"))
             }
         };
-        // TODO costumize datadir
+        // TODO costumize datadirœ
         // const datadir = appConfig.DATA_DIRECTORY || "default-data/_core_default-data";
         // this.helpPageConfig = {
         //     ABOUT: {
         //         key: "ABOUT",
         //         label: "About",
-        //         content: cvt.makeHtml(require(datadir +  "help/about.md"))
+        //         content: cvt.makeHtml(appConfig.ABOUT_MARKDOWN)
         //     },
         //     FAQ: {
         //         key: "FAQ",
         //         label: "FAQ",
-        //         content: cvt.makeHtml(require(datadir + "/help/faq.md"))
+        //         content: cvt.makeHtml(appConfig.FAQ_MARKDOWN)
         //     },
         //     SYS_REQ: {
         //         key: "SYS_REQ",
         //         label: "System Requirements",
-        //         content: cvt.makeHtml(require(datadir + "/help/systemReqs.md"))
+        //         content: cvt.makeHtml(appConfig.SYSTEM_REQS_MARKDOWN)
         //     }
         // };
     }

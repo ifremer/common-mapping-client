@@ -2,7 +2,7 @@
     "layers": [
         {
             "id": "argo-eov-data-raster",
-            "title": "Argo EOV data discovery (dynamic)",
+            "title": "1 Month Argo EOV data discovery",
             "type": "data",
             "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
@@ -23,8 +23,15 @@
                         "property":"parameter_value",
                         "value": "35",
                         "list": [
-                            {"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":"35"},
-                            {"palette":"sea-surface-salinity","label":"Sea water salinity","code":"30"}
+                            {"palette":"sea-surface-temp-ifremer", "label":"Sea temperature","code":"35"},
+                            {"palette":"sea-surface-psal-ifremer","label":"Practical salinity","code":"30"},
+                            {"palette":"sea-surface-temp-ifremer","label":"Dissolved oxygen","code":"64"},
+                            {"palette":"sea-surface-temp-ifremer","label":"Chlorophyll-a","code":"65"},
+                            {"palette":"sea-surface-temp-ifremer","label":"Ph","code":"124"},
+                            {"palette":"sea-surface-temp-ifremer","label":"Turbidity","code":"135"},
+                            {"palette":"sea-surface-temp-ifremer","label":"Cdom","code":"169"},
+                            {"palette":"sea-surface-temp-ifremer","label":"Nitrate (NO3-N)","code":"381"},
+                            {"palette":"sea-surface-temp-ifremer","label":"Bisulfide (HS-)","code":"575"}
                         ],
                         "type": "select"
                     },
@@ -34,72 +41,40 @@
                         "value": "0",
                         "list": [
                             {"label":"Sea surface","code":0},
-                            {"label":"5 meters depth","code":5},
-                            {"label":"100 meters depth","code":100},
-                            {"label":"500 meters depth","code":500},
-                            {"label":"1000 meters depth","code":1000},
-                            {"label":"1500 meters depth","code":1500},
-                            {"label":"2000 meters depth","code":2000}
-                        ],
-                        "type": "select"
-                    }
-                 }
-            },
-            "mapping": {
-                "title": "platform_code",
-                "subtitle": "station_date",
-                "properties": {
-                    "parameter_code" : "Parameter code",
-                    "parameter_value": "Parameter value",
-                    "z_level": "depth level" ,
-                    "z_value": "real depth"
-                },
-                "data": {
-                    "label": "To profile data",
-                    "link": "https://co-insitucharts.ifremer.fr/station/{IDENTIFIER}/",
-                    "identifier": { "code": "station_id", "type": "number" }
-                }
-            }
-        },
-        {
-            "id": "argo-eov-data",
-            "title": "Argo EOV data discovery",
-            "type": "data",
-            "handleAs": "vector_geojson_raster",
-            "vectorStyle": "profile",
-            "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}",
-            "timeFormat": "X",
-            "metadata": {
-                "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
-                "handleAs": "json"
-            },
-            "thumbnailImage": "img/argo_discovery_thumbnail.png",
-            "bindingParameter":"parameter",
-            "updateParameters": {
-                "time": true,
-                "filters": {
-                    "parameter" : {
-                        "label": "Select parameter",
-                        "property":"parameter_value",
-                        "value": "35",
-                        "list": [
-                            {"palette":"sea-surface-temp-erddap", "label":"Sea water temperature","code":"35"},
-                            {"palette":"sea-surface-salinity","label":"Sea water salinity","code":"30"}
-                        ],
-                        "type": "select"
-                    },
-                    "depth" : {
-                        "label": "Select depth",
-                        "property":"z_level",
-                        "value": "0",
-                        "list": [
-                            {"label":"Sea surface","code":0},
-                            {"label":"5 meters depth","code":5},
-                            {"label":"100 meters depth","code":100},
-                            {"label":"500 meters depth","code":500},
-                            {"label":"1000 meters depth","code":1000},
-                            {"label":"1500 meters depth","code":1500},
-                            {"label":"2000 meters depth","code":2000}
+                            {"label":"5 meters","code":5},
+                            {"label":"10 meters","code":10},
+                            {"label":"20 meters","code":20},
+                            {"label":"30 meters","code":30},
+                            {"label":"50 meters","code":50},
+                            {"label":"75 meters","code":75},
+                            {"label":"100 meters","code":100},
+                            {"label":"125 meters","code":125},
+                            {"label":"150 meters","code":150},
+                            {"label":"200 meters","code":200},
+                            {"label":"250 meters","code":250},
+                            {"label":"300 meters","code":300},
+                            {"label":"400 meters","code":400},
+                            {"label":"500 meters","code":500},
+                            {"label":"600 meters","code":600},
+                            {"label":"700 meters","code":700},
+                            {"label":"800 meters","code":800},
+                            {"label":"900 meters","code":900},
+                            {"label":"1000 meters","code":1000},
+                            {"label":"1100 meters","code":1100},
+                            {"label":"1200 meters","code":1200},
+                            {"label":"1300 meters","code":1300},
+                            {"label":"1400 meters","code":1400},
+                            {"label":"1500 meters","code":1500},
+                            {"label":"2000 meters","code":2000},
+                            {"label":"2500 meters","code":2500},
+                            {"label":"3000 meters","code":3000},
+                            {"label":"3500 meters","code":3500},
+                            {"label":"4000 meters","code":4000},
+                            {"label":"4500 meters","code":4500},
+                            {"label":"5000 meters","code":5000},
+                            {"label":"5500 meters","code":5500},
+                            {"label":"6000 meters","code":6000}
+
                         ],
                         "type": "select"
                     }
@@ -139,7 +114,12 @@
                     "openlayers": "kvpTimeParam_wmts",
                     "cesium": "kvpTimeParam_wmts"
                 }
-            }
+            },
+            "palette": {
+                "name": "GIBS_SST",
+                "handleAs": "json-fixed"
+            },
+            "thumbnailImage": "img/GHRSST_L4_G1SST_Sea_Surface_Temperature.png"
         },
         {
             "id": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
