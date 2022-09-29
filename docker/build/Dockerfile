@@ -27,6 +27,6 @@ COPY --from=prepare $CACHE_DIR/package.json .
 COPY --from=prepare $CACHE_DIR/package-lock.json .
 
 # Install project dependencies
-RUN npm ci
+RUN npm ci --unsafe-perm
 
 WORKDIR /build

@@ -70,11 +70,9 @@ build:env:
   needs: ["build:env"]
   script:
     # Get project dependencies
-    - ls -artl ${BUILD_CACHE_DIR}
     - cp -R ${BUILD_CACHE_DIR}/node_modules .
     # Build
     - npm run build
-    - ls -artl dist
   after_script:
     # Remember version
     - APP_VERSION=$(node -e "console.log(require('./package.json').version)")
