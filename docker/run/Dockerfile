@@ -24,6 +24,8 @@ COPY --chown=${USERNAME}:${GROUPNAME} ${ENVIRONMENTS} /app/environments
 COPY --chown=${USERNAME}:${GROUPNAME} ${ENTRYPOINT} /app/app.sh
 RUN chmod +x /app/app.sh
 
+RUN ls -artl /app/www
+
 USER ${USERNAME}
 
 # Port 80 is reserved for root user

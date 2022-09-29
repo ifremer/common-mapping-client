@@ -190,6 +190,7 @@ gitlab-release:
   stage: docker
   script:
     # Build docker image
+    - ls -artl dist
     - docker pull ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} || true
     - docker build --cache-from ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} --pull -t ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} --build-arg="IMAGE_REGISTRY=${DOCKER_IMAGE_REGISTRY}" -f docker/run/Dockerfile .
     - docker push ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
