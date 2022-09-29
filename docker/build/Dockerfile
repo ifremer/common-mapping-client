@@ -16,7 +16,7 @@ RUN sed -i '1,/version/{x;/first/s///;x;s/version\": \".*\"/version\": \"0.0.0\"
 # BUILD STAGE
 FROM $IMAGE_REGISTRY$DOCKER_IMAGE AS build
 ARG CACHE_DIR=/tmp/.build-cache
-WORKDIR $CACHE_DIR
+WORKDIR /build
 
 # install system libraries
 RUN apt update && \
@@ -32,5 +32,3 @@ COPY src/_core/styles/resources/img/CesiumDrawHelper/*.png ./src/_core/styles/re
 
 # caching npm depedencies
 RUN npm ci --unsafe-perm
-
-WORKDIR /build

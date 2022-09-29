@@ -70,7 +70,7 @@ build:env:
   needs: ["build:env"]
   script:
     # Get project dependencies
-    - cp -R ${BUILD_CACHE_DIR}/node_modules .
+    # - cp -R ${BUILD_CACHE_DIR}/node_modules .
     # Build
     - npm run build
   after_script:
@@ -106,7 +106,7 @@ build:feature:
   script:
     # Get project dependencies
     - ls -artl ${BUILD_CACHE_DIR}
-    - cp -R ${BUILD_CACHE_DIR}/node_modules .
+    # - cp -R ${BUILD_CACHE_DIR}/node_modules .
     # Build
     - npm run test --includecoretests
   after_script:
