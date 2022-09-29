@@ -69,9 +69,8 @@ build:env:
   stage: build
   needs: ["build:env"]
   script:
-    # Get project dependencies
-    - cp -R ${BUILD_CACHE_DIR}/node_modules .
-    - cp -R ${BUILD_CACHE_DIR}/assets .
+    # Get build cache dependencies
+    - cp -R ${BUILD_CACHE_DIR}/* .
     # Build
     - npm run build
   after_script:
