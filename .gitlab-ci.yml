@@ -72,8 +72,10 @@ build:env:
     # Get project dependencies
     - ls -artl ${BUILD_CACHE_DIR}
     - cp -R ${BUILD_CACHE_DIR}/node_modules .
+    - ls -artl dist
     # Build
     - npm run build
+    - ls -artl dist
   after_script:
     # Remember version
     - APP_VERSION=$(node -e "console.log(require('./package.json').version)")
@@ -190,7 +192,6 @@ gitlab-release:
   stage: docker
   script:
     # Build docker image
-    - ls -artl dist
     - docker pull ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} || true
     - docker build --cache-from ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} --pull -t ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} --build-arg="IMAGE_REGISTRY=${DOCKER_IMAGE_REGISTRY}" -f docker/run/Dockerfile .
     - docker push ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
