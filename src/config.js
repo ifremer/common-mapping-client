@@ -39,20 +39,22 @@ APPLICATION_CONFIG = {
 
 */
 
-APPLICATION_CONFIG = {
-    APP_TITLE: "Argo Marine data discovery",
-    APP_LOGO: "img/eosc-future.svg",
-    URLS: {
-        layerConfig: [
-            {
-                url: "default-data/_core_default-data/capabilities.xml",
-                type: "wmts/xml"
-            },
-            {
-                url: "default-data/eosc-data/layers.json",
-                type: "json"
-            }
-        ],
-        paletteConfig: "default-data/eosc-data/palettes.json"
-    }
-};
+APPLICATION_CONFIG = {};
+
+// APPLICATION_CONFIG = {
+//     APP_TITLE: "Argo Marine data discovery",
+//     APP_LOGO: "img/eosc-future.svg",
+//     URLS: {
+//         layerConfig: [
+//             {
+//                 url: "default-data/_core_default-data/capabilities.xml",
+//                 type: "wmts/xml"
+//             },
+//             {
+//                 url: "default-data/eosc-data/layers.json",
+//                 type: "json"
+//             }
+//         ],
+//         paletteConfig: "default-data/eosc-data/palettes.json"
+//     }
+// };

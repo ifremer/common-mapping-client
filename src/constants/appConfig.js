@@ -33,23 +33,6 @@ const APP_CONFIG = Immutable.fromJS({
     ABOUT_MARKDOWN: require("default-data/_core_default-data/help/about.md"),
     FAQ_MARKDOWN: require("default-data/_core_default-data/help/about.md"),
     SYSTEM_REQS_MARKDOWN: require("default-data/_core_default-data/help/about.md"),
-    // URLS: {
-    //     layerConfig: [
-    //         {
-    //             url: "default-data/_core_default-data/capabilities.xml",
-    //             type: "wmts/xml"
-    //         },
-    //         {
-    //             url: "default-data/eosc-data/layers.json",
-    //             type: "json"
-    //         }
-    //     ],
-    //     paletteConfig: "default-data/eosc-data/palettes.json"
-    // },
-    // DATA_DIRECTORY: "default-data/eosc-data",
-    // ABOUT_MARKDOWN: require("default-data/eosc-data/help/about.md"),
-    // FAQ_MARKDOWN: require("default-data/eosc-data/help/about.md"),
-    // SYSTEM_REQS_MARKDOWN: require("default-data/eosc-data/help/about.md"),
     /* MAP */
     VERTICAL_PROFILE_FILL_COLOR: "rgba(255,200,68, 1)",
     VERTICAL_PROFILE_STROKE_COLOR: "rgba(48, 48, 48, 1)",
