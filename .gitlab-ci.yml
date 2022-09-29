@@ -105,7 +105,7 @@ build:feature:
   needs: ["build:env"]
   script:
     # Get project dependencies
-    - cp -R ${BUILD_CACHE_DIR}/node_modules .
+    - cp -R ${BUILD_CACHE_DIR}/* .
     # Build
     - npm run test --includecoretests
   after_script:

@@ -22,10 +22,10 @@ WORKDIR $CACHE_DIR
 RUN apt update && \
     apt -y install git bzip2 curl
 
-# get cached packages
+# get cached unversioned packages
 COPY --from=prepare $CACHE_DIR/package.json .
 COPY --from=prepare $CACHE_DIR/package-lock.json .
-# get postinstall requirements
+# get postinstall script and requirements
 COPY scripts/postinstall.sh ./scripts/postinstall.sh
 COPY lib ./lib
 COPY src/_core/styles/resources/img/CesiumDrawHelper/*.png ./src/_core/styles/resources/img/CesiumDrawHelper/
@@ -33,7 +33,7 @@ COPY src/_core/styles/resources/img/CesiumDrawHelper/*.png ./src/_core/styles/re
 # caching npm depedencies
 RUN npm ci --unsafe-perm
 
-# remove unrequired files for build
+# remove files not needed for building from cache directory
 RUN rm -Rf lib scripts src
 RUN rm package.json package-lock.json
 
