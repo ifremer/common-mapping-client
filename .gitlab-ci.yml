@@ -116,7 +116,7 @@ build:feature:
     - echo "APP_VERSION=${APP_VERSION}" > ${ENV_FILE}
   when: manual
 
-build:
+test:
   extends: .test
   image: ${CI_BUILD_IMAGE}
   except:
