@@ -32,3 +32,4 @@ COPY src/_core/styles/resources/img/CesiumDrawHelper/*.png ./src/_core/styles/re
 
 # caching npm depedencies
 RUN npm ci --unsafe-perm
+COPY . .
