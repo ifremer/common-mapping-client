@@ -22,11 +22,15 @@ WORKDIR $CACHE_DIR
 RUN apt update && \
     apt -y install git bzip2 curl
 
-# Caching npm depedencies
+# get cached packages
 COPY --from=prepare $CACHE_DIR/package.json .
 COPY --from=prepare $CACHE_DIR/package-lock.json .
+# get postinstall requirements
+COPY scripts/postinstall.sh ./scripts/postinstall.sh
+COPY lib ./lib
+COPY src/_core/styles/resources/img/CesiumDrawHelper/*.png ./src/_core/styles/resources/img/CesiumDrawHelper/
 
-# Install project dependencies
+# caching npm depedencies
 RUN npm ci --unsafe-perm
 
 WORKDIR /build
