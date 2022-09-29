@@ -72,7 +72,6 @@ build:env:
     # Get project dependencies
     - ls -artl ${BUILD_CACHE_DIR}
     - cp -R ${BUILD_CACHE_DIR}/node_modules .
-    - ls -artl dist
     # Build
     - npm run build
     - ls -artl dist
