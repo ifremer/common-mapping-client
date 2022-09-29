@@ -10,7 +10,7 @@ stages:
   - docs
 
 default:
-  tags: ["regards-docker-ifremer"]
+  tags: ["api-common "]
   image: gitlab-registry.ifremer.fr/ifremer-commons/docker/images/node:12
 
 # ---------------------------------------------------------------
@@ -35,11 +35,9 @@ variables:
     - git config --global user.email "${GITLAB_USER_EMAIL}"
     - git config --global user.name "${GITLAB_USER_NAME}"
     - git fetch origin
-  tags: [ifremer-common]
 
 .docker:
   image: docker:latest
-  tags: [quadrige-runner]
   services:
     - docker:dind
   before_script:
@@ -69,17 +67,13 @@ build:env:
 # ---------------------------------------------------------------
 .build:
   stage: build
-  tags: [quadrige-runner]
   needs: ["build:env"]
   script:
     # Get project dependencies
     - ls -artl ${BUILD_CACHE_DIR}
     - cp -R ${BUILD_CACHE_DIR}/node_modules .
-    # Show version
-    - ng version
-    - npm version
     # Build
-    - npm run build.dev
+    - npm run build
   after_script:
     # Remember version
     - APP_VERSION=$(node -e "console.log(require('./package.json').version)")
@@ -105,58 +99,60 @@ build:feature:
   when: manual
 
 # ---------------------------------------------------------------
+# Tests jobs
+# ---------------------------------------------------------------
+.test:
+  stage: test
+  needs: ["build:env"]
+  script:
+    # Get project dependencies
+    - ls -artl ${BUILD_CACHE_DIR}
+    - cp -R ${BUILD_CACHE_DIR}/node_modules .
+    # Build
+    - npm run test --includecoretests
+  after_script:
+    # Remember version
+    - APP_VERSION=$(node -e "console.log(require('./package.json').version)")
+    - echo "APP_VERSION=${APP_VERSION}" > ${ENV_FILE}
+  when: manual
+
+build:
+  extends: .test
+  image: ${CI_BUILD_IMAGE}
+  except:
+    - master
+    - tags
+
+# ---------------------------------------------------------------
 # Release jobs
 # ---------------------------------------------------------------
 .release:
   <<: *git-setup
   stage: release
   script:
-      - if [[ "_${RELEASE_VERSION}" == "_" ]]; then exit 1; fi
-      - echo "Release in progress"
-      - git checkout -b release/${RELEASE_VERSION}
-      - echo "manage app version"
-      - 'current=`grep -oP "version\": \"\d+.\d+.\d+(-(alpha|beta|rc)[0-9]*)?" package.json | grep -m 1 -oP "\d+.\d+.\d+(-(alpha|beta|rc)[0-9]*)?"`'
-      - 'sed -i "s/version\": \"$current\"/version\": \"${RELEASE_VERSION}\"/g" package.json'
-      - 'currentManifestJsonVersion=`grep -oP "version\": \"\d+.\d+.\d+(-(alpha|beta|rc)[0-9]*)?\"" src/assets/manifest.json | grep -oP "\d+.\d+.\d+(-(alpha|beta|rc)[0-9]*)?"`'
-      - 'sed -i "s/version\": \"$currentManifestJsonVersion\"/version\": \"${RELEASE_VERSION}\"/g" src/assets/manifest.json'
-      # Copy cached dependencies and build
-      - ls -artl "${BUILD_CACHE_DIR}"
-      - cp -R "${BUILD_CACHE_DIR}/node_modules" .
-      # Show version
-      - ng version
-      - npm version
-      # Build
-      - npm run build.prod
-      # Git process for release (ISO gitflow)
-      - git add .
-      - git commit -m "Prepare release ${RELEASE_VERSION}"
-      - git checkout master
-      - git merge --no-ff --no-edit -m "Release ${RELEASE_VERSION}" "release/${RELEASE_VERSION}"
-      - git tag -a "${RELEASE_VERSION}" -m "${RELEASE_VERSION}"
-      - git checkout develop
-      - git merge --no-ff --no-edit -m "[skip ci] Release ${RELEASE_VERSION}" "release/${RELEASE_VERSION}"
-      - git push origin develop
-      - git push origin master
-      - git push --tags
-      - git branch -D "release/${RELEASE_VERSION}"
-  after_script:
-    # Remember version
-    - APP_VERSION=$(node -e "console.log(require('./package.json').version)")
-    - echo "APP_VERSION=${APP_VERSION}" > ${ENV_FILE}
-    # Zip output
-    - fileName=quadmire-${APP_VERSION}.zip
-    - currentDir=$(pwd)
-    - mkdir -p ${currentDir}/dist
-    - zipFile=${currentDir}/dist/${fileName}
-    - if [[ -f "${zipFile}" ]]; then rm "${zipFile}"; fi
-    - cd www || exit 1
-    - if ! zip -q -r "${zipFile}" . ; then echo "Cannot create the archive for the web artifact"; exit 1; fi
-    - cd ..
-    - targetUrl="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/quadmire/${APP_VERSION}/${fileName}"
-    - echo "Deploy to gitlab generic package :"
-    - echo " File= ${zipFile}"
-    - echo " Url= ${targetUrl}"
-    - 'if ! curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "${zipFile}" "${targetUrl}"; then exit 1; fi'
+    - if [[ "_${RELEASE_VERSION}" == "_" ]]; then echo "The environment variable RELEASE_VERSION need to be setup." && exit 1; fi
+    - echo "Release in progress"
+    - git checkout -b release/${RELEASE_VERSION}
+    - echo "manage app version"
+    - 'current=`grep -oP "version\": \"\d+.\d+.\d+(-(alpha|beta|rc)[0-9]*)?" package.json | grep -m 1 -oP "\d+.\d+.\d+(-(alpha|beta|rc)[0-9]*)?"`'
+    - 'sed -i "s/version\": \"$current\"/version\": \"${RELEASE_VERSION}\"/g" package.json'
+    # Copy cached dependencies and build
+    - ls -artl "${BUILD_CACHE_DIR}"
+    - cp -R "${BUILD_CACHE_DIR}/node_modules" .
+    # Build
+    - npm run build
+    # Git process for release (ISO gitflow)
+    - git add .
+    - git commit -m "Prepare release ${RELEASE_VERSION}"
+    - git checkout master
+    - git merge --no-ff --no-edit -m "Release ${RELEASE_VERSION}" "release/${RELEASE_VERSION}"
+    - git tag -a "${RELEASE_VERSION}" -m "${RELEASE_VERSION}"
+    - git checkout develop
+    - git merge --no-ff --no-edit -m "[skip ci] Release ${RELEASE_VERSION}" "release/${RELEASE_VERSION}"
+    - git push origin develop
+    - git push origin master
+    - git push --tags
+    - git branch -D "release/${RELEASE_VERSION}"
   artifacts:
     paths:
       - ${BUILD_ARTIFACT}
@@ -175,7 +171,6 @@ release:
 
 gitlab-release:
     stage: release
-    tags: [quadrige-runner]
     image: registry.gitlab.com/gitlab-org/release-cli:latest
     script:
         - echo "running release for ${CI_COMMIT_TAG}"
@@ -230,7 +225,6 @@ docker:release:
 
 pages:
   stage: docs
-  tags: [quadrige-runner]
   image: python:3.7-alpine
   before_script:
     - apk --update --upgrade add gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf-dev
