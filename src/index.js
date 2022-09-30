@@ -38,6 +38,7 @@ require("_core/styles/resources/img/layer_thumbnails/BlueMarble_ShadedRelief_Bat
 require("_core/styles/resources/img/layer_thumbnails/OSM_Land_Water_Map.png");
 require("_core/styles/resources/img/layer_thumbnails/ASTER_GDEM_Color_Shaded_Relief.jpeg");
 require("styles/resources/img/layer_thumbnails/argo_discovery_thumbnail.png");
+require("styles/resources/img/layer_thumbnails/argo_eosc_thumbnail.png");
 require("styles/resources/img/layer_thumbnails/odyssea_thumbnail.png");
 require("styles/resources/img/NRTOA_TEMP_colorbar.png");
 require("styles/resources/img/NRTOA_PSAL_colorbar.png");

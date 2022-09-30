@@ -12,7 +12,7 @@
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
                 "handleAs": "json"
             },
-            "thumbnailImage": "img/argo_discovery_thumbnail.png",
+            "thumbnailImage": "img/argo_eosc_thumbnail.png",
             "bindingParameter":"parameter",
             "updateParameters": {
                 "time": true,
@@ -25,10 +25,10 @@
                         "list": [
                             {"palette":"sea-surface-temp-ifremer", "label":"Sea temperature","code":"35"},
                             {"palette":"sea-surface-psal-ifremer","label":"Practical salinity","code":"30"},
-                            {"palette":"sea-surface-temp-ifremer","label":"Dissolved oxygen","code":"64"},
-                            {"palette":"sea-surface-temp-ifremer","label":"Chlorophyll-a","code":"65"},
+                            {"palette":"sea-surface-doxy-ifremer","label":"Dissolved oxygen","code":"64"},
+                            {"palette":"sea-surface-chlo-ifremer","label":"Chlorophyll-a","code":"65"},
                             {"palette":"sea-surface-temp-ifremer","label":"Ph","code":"124"},
-                            {"palette":"sea-surface-temp-ifremer","label":"Turbidity","code":"135"},
+                            {"palette":"sea-surface-turb-ifremer","label":"Turbidity","code":"135"},
                             {"palette":"sea-surface-temp-ifremer","label":"Cdom","code":"169"},
                             {"palette":"sea-surface-temp-ifremer","label":"Nitrate (NO3-N)","code":"381"},
                             {"palette":"sea-surface-temp-ifremer","label":"Bisulfide (HS-)","code":"575"}
@@ -80,6 +80,10 @@
                     }
                  }
             },
+            "palette": {
+                "name": "sea-surface-temp-ifremer",
+                "handleAs": "json-fixed"
+            },
             "mapping": {
                 "title": "platform_code",
                 "subtitle": "station_date",
@@ -101,6 +105,7 @@
             "title": "GHRSST L4MUR (Sea Surface Temperature)",
             "type": "data",
             "handleAs": "GIBS_raster",
+            "isDefault": true,
             "mappingOptions": {
                 "matrixSet": "1km",
                 "url": "https://gibs-c.earthdata.nasa.gov/wmts/epsg4326/best/wmts.cgi",
@@ -120,24 +125,6 @@
                 "handleAs": "json-fixed"
             },
             "thumbnailImage": "img/GHRSST_L4_G1SST_Sea_Surface_Temperature.png"
-        },
-        {
-            "id": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
-            "title": "True Color",
-            "type": "data",
-            "handleAs": "GIBS_raster",
-            "isDefault": true,
-            "mappingOptions": {
-                "urlFunctions": {
-                    "openlayers": "kvpTimeParam_wmts",
-                    "cesium": "kvpTimeParam_wmts"
-                }
-            },
-            "metadata": {
-                "url": "default-data/_core_default-data/layer-metadata/VIIRS_SNPP_CorrectedReflectance_TrueColor.json",
-                "handleAs": "json"
-            },
-            "thumbnailImage": "img/VIIRS_SNPP_CorrectedReflectance_TrueColor.png"
         },
         {
             "id": "MODIS_Terra_Brightness_Temp_Band31_Day",
