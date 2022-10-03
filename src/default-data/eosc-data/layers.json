@@ -6,7 +6,7 @@
             "type": "data",
             "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
-            "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
+            "url": "http://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
             "timeFormat": "X",
             "metadata": {
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
@@ -27,17 +27,16 @@
                             {"palette":"sea-surface-psal-ifremer","label":"Practical salinity","code":"30"},
                             {"palette":"sea-surface-doxy-ifremer","label":"Dissolved oxygen","code":"64"},
                             {"palette":"sea-surface-chlo-ifremer","label":"Chlorophyll-a","code":"65"},
-                            {"palette":"sea-surface-temp-ifremer","label":"Ph","code":"124"},
+                            {"palette":"sea-surface-ph-ifremer","label":"Ph","code":"124"},
                             {"palette":"sea-surface-turb-ifremer","label":"Turbidity","code":"135"},
-                            {"palette":"sea-surface-temp-ifremer","label":"Cdom","code":"169"},
-                            {"palette":"sea-surface-temp-ifremer","label":"Nitrate (NO3-N)","code":"381"},
-                            {"palette":"sea-surface-temp-ifremer","label":"Bisulfide (HS-)","code":"575"}
+                            {"palette":"sea-surface-cdom-ifremer","label":"Cdom","code":"169"},
+                            {"palette":"sea-surface-no3-ifremer","label":"Nitrate (NO3-N)","code":"381"},
+                            {"palette":"sea-surface-hs-ifremer","label":"Bisulfide (HS-)","code":"575"}
                         ],
                         "type": "select"
                     },
                     "depth" : {
                         "label": "Select depth",
-                        "property":"z_level",
                         "value": "0",
                         "list": [
                             {"label":"Sea surface","code":0},
