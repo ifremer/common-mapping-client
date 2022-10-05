@@ -5,6 +5,7 @@
             "title": "1 Month Argo EOV data discovery",
             "type": "data",
             "handleAs": "vector_geojson_raster",
+            "isDefault": true,
             "vectorStyle": "profile",
             "url": "http://localhost:8080/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
             "timeFormat": "X",
