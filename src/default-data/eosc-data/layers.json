@@ -7,7 +7,7 @@
             "handleAs": "vector_geojson_raster",
             "isDefault": true,
             "vectorStyle": "profile",
-            "url": "http://localhost:8080/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
+            "url": "https://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
             "timeFormat": "X",
             "metadata": {
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
