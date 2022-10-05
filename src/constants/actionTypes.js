@@ -1,4 +1,3 @@
 export const PIXEL_DRAG = "PIXEL_DRAG";
 export const MAP_MOVE_END = "MAP_MOVE_END";
 export const UPDATE_FILTERED_LAYER = "UPDATE_FILTERED_LAYER";
-export const BIND_LAYER_DATA = "BIND_LAYER_DATA";

@@ -6,6 +6,8 @@ import moment from "moment";
 import Modernizr from "modernizr";
 import Immutable, { List } from "immutable";
 import MapUtil from "utils/MapUtil";
+import TileHandler from "_core/utils/TileHandler";
+import MiscUtil from "_core/utils/MiscUtil";
 
 export default class MapWrapperCesium extends MapWrapperCesiumCore {
     /**
@@ -24,9 +26,24 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
         this.initStaticClasses(container, options);
         this.initObjects(container, options);
 
-        this.mapUtil = MapUtil;
+        // this.mapUtil = MapUtil;
         this.initializationSuccess = this.map ? true : false;
-        // this.palettesOptions = options.get("palettes").toJS();
+        this.palettesOptions = options.get("palettes");
+    }
+
+    /**
+     * Initialize static class references for this instance
+     *
+     * @param {string|domnode} container the container to render this map into
+     * @param {object} options view options for constructing this map wrapper (usually map state from redux)
+     * @memberof MapWrapperCesium
+     */
+    initStaticClasses(container, options) {
+        this.tileHandler = TileHandler;
+        this.mapUtil = MapUtil;
+        this.miscUtil = MiscUtil;
+
+        this.initCesium(container, options);
     }
 
     /**
@@ -322,11 +339,17 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
             let options = { url: url };
             let layerSource = this.createVectorSource(layer, options);
 
+            // get palette to apply to feature
+            const palette = this.palettesOptions.find(
+                palette => palette.get("id") === layer.getIn(["palette", "name"])
+            );
             if (layerSource) {
                 // layer source is a promise that acts as a stand-in while the data loads
                 layerSource.then(mapLayer => {
                     this.setLayerRefInfo(layer, mapLayer);
-                    this.setVectorLayerFeatureStyles(layer, layer.get("palette"), mapLayer);
+                    if (palette) {
+                        this.createVectorLayerStyle(layer, palette, mapLayer);
+                    }
                     setTimeout(() => {
                         this.setLayerOpacity(layer, layer.get("opacity"));
                     }, 0);
@@ -469,38 +492,40 @@ export default class MapWrapperCesium extends MapWrapperCesiumCore {
      * @param {*} layer
      * @param {*} mapLayer
      */
-    setVectorLayerFeatureStyles(layer, palette, mapLayer) {
+    createVectorLayerStyle(layer, palette, mapLayer) {
         try {
             let features = mapLayer.entities.values;
-            for (let i = 0; i < features.length; ++i) {
-                let feature = features[i];
-                feature.billboard = undefined;
-                feature.label = undefined;
-                feature._layerId = layer.get("id");
-                const bindParameter = layer.getIn([
-                    "updateParameters",
-                    "filters",
-                    layer.get("bind_parameter")
-                ]);
-                if (bindParameter && bindParameter.get("value")) {
-                    // let parameters = feature.properties["parameterDescription"].getValue();
-                    // const parameter = parameters.find(param => {
-                    //     return param.parameterCode === "35";
-                    // });
-                    const parameterValue = feature.properties[
+            if (palette.get("values")) {
+                for (let i = 0; i < features.length; ++i) {
+                    let feature = features[i];
+                    feature.billboard = undefined;
+                    feature.label = undefined;
+                    feature._layerId = layer.get("id");
+                    const bindParameter = layer.getIn([
+                        "updateParameters",
+                        "filters",
+                        layer.get("bindingParameter")
+                    ]);
+                    if (
+                        bindParameter &&
+                        bindParameter.get("value") &&
                         bindParameter.get("property")
-                    ].getValue();
-                    if (parameterValue) {
-                        const color = this.mapUtil.getFeatureColorFromPalette(
-                            palette.toJS(),
-                            parseFloat(parameterValue)
-                        );
-                        feature.point = this.getLayerStyle(layer.get("vectorStyle"), color);
+                    ) {
+                        const parameterValue = feature.properties[
+                            bindParameter.get("property")
+                        ].getValue();
+                        if (parameterValue) {
+                            const color = this.mapUtil.getFeatureColorFromPalette(
+                                palette.toJS(),
+                                parseFloat(parameterValue)
+                            );
+                            feature.point = this.getLayerStyle(layer.get("vectorStyle"), color);
+                        } else {
+                            feature.point = this.getLayerStyle(layer.get("vectorStyle"));
+                        }
                     } else {
                         feature.point = this.getLayerStyle(layer.get("vectorStyle"));
                     }
-                } else {
-                    feature.point = this.getLayerStyle(layer.get("vectorStyle"));
                 }
             }
             return true;
