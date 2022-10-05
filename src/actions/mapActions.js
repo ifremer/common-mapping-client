@@ -9,14 +9,10 @@ export function mapMoveEnd() {
     return { type: types.MAP_MOVE_END };
 }
 
-export function updateFilteredLayer(layer, parameter, value) {
-    return { type: types.UPDATE_FILTERED_LAYER, layer, parameter, value };
+export function updateFilteredLayer(layer, parameter, value, palette) {
+    return { type: types.UPDATE_FILTERED_LAYER, layer, parameter, value, palette };
 }
 
-export function setLayerPalette(layer, paletteConfig) {
-    return { type: coreTypes.SET_LAYER_PALETTE, layer, paletteConfig };
-}
-
-export function bindLayerData(layer, parameter, value, paletteId, palette) {
-    return { type: types.BIND_LAYER_DATA, layer, parameter, value, paletteId, palette };
+export function setLayerPalette(layer, palette) {
+    return { type: coreTypes.SET_LAYER_PALETTE, layer, palette };
 }

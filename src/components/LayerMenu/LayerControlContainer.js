@@ -64,53 +64,27 @@ export class LayerControlContainer extends LayerControlContainerCore {
             nextLayer.get("max") !== currLayer.get("max") ||
             nextLayer.get("units") !== currLayer.get("units") ||
             nextLayer.get("displayIndex") !== currLayer.get("displayIndex") ||
-            nextLayer.get("updateParameters").get("filters") !==
-                currLayer.get("updateParameters").get("filters")
+            nextLayer.getIn(["updateParameters", "filters"]) !==
+                currLayer.getIn(["updateParameters", "filters"])
         );
     }
 
-    setLayerActive(active) {
-        this.isChangingPosition = false;
-        this.isChangingOpacity = false;
-        // data binding when activate layer
-        const bindingParameter = this.props.layer.get("bindingParameter");
-        if (bindingParameter) {
-            const defaultValue = this.props.layer.getIn([
-                "updateParameters",
-                "filters",
-                bindingParameter,
-                "value"
-            ]);
-            if (this.props.layer.get("bindingParameter")) {
-                this.setLayerDataBind(this.props.layer.get("bindingParameter"), defaultValue);
-            }
-        }
-        this.props.mapActions.setLayerActive(this.props.layer.get("id"), !active);
-    }
-
-    setLayerDataBind(parameter, value) {
-        const palette = this.props.layer
-            .getIn(["updateParameters", "filters", parameter, "list"])
-            .filter(option => option.get("code") === value)
-            .map(option => option.get("palette"))
-            .get(0);
-        this.props.mapActionsIfr.bindLayerData(
-            this.props.layer,
-            parameter,
-            value,
-            palette,
-            this.props.palettes.get(palette).get("values")
-        );
+    changePalette(paletteId) {
+        this.props.mapActionsIfr.setLayerPalette(this.props.layer, paletteId);
     }
 
     handleChangeSelect = key => event => {
-        // if selected is the binding parameter then bind else just update query parameters
-        const bindingParameter = this.props.layer.get("bindingParameter");
-        if (key === bindingParameter) {
-            this.setLayerDataBind(bindingParameter, event.target.value);
-        } else {
-            this.props.mapActionsIfr.updateFilteredLayer(this.props.layer, key, event.target.value);
-        }
+        // get option palette id if exists
+        const option =
+            this.props.layer
+                .getIn(["updateParameters", "filters", key, "list"])
+                .find(option => option.get("code") === event.target.value) || undefined;
+        this.props.mapActionsIfr.updateFilteredLayer(
+            this.props.layer,
+            key,
+            event.target.value,
+            option && option.get("palette")
+        );
     };
 
     handleChangeCheckbox(parameter, value) {

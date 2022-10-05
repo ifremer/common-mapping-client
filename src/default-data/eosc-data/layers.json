@@ -6,7 +6,7 @@
             "type": "data",
             "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
-            "url": "http://api-argo.isival.ifremer.fr/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
+            "url": "http://localhost:8080/api/eosc/geojson?start={TIME_MIN}&end={TIME_MAX}&bbox={BOUNDING_BOX}",
             "timeFormat": "X",
             "metadata": {
                 "url": "default-data/eosc-data/layer-metadata/argo_eov_data.json",
@@ -81,7 +81,9 @@
             },
             "palette": {
                 "name": "sea-surface-temp-ifremer",
-                "handleAs": "json-fixed"
+                "handleAs": "json-fixed",
+                "min": 0,
+                "max": 32
             },
             "mapping": {
                 "title": "platform_code",

@@ -15,6 +15,8 @@ import Ol_Source_WMS from "ol/source/ImageWMS";
 import Immutable, { List } from "immutable";
 import MapUtil from "utils/MapUtil";
 import Cache from "_core/utils/Cache";
+import TileHandler from "_core/utils/TileHandler";
+import MiscUtil from "_core/utils/MiscUtil";
 
 export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
     /**
@@ -28,10 +30,39 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
         super(container, options);
     }
 
-    initStaticClasses(container, options) {
-        MapWrapperOpenlayersCore.prototype.initStaticClasses.call(this, container, options);
-        this.mapUtil = MapUtil;
+    /**
+     * Initialize instance variables
+     *
+     * @param {string|domnode} container the container to render this map into
+     * @param {object} options view options for constructing this map wrapper (usually map state from redux)
+     * @memberof MapWrapperOpenlayers
+     */
+    init(container, options) {
+        this.initBools(container, options);
+        this.initStaticClasses(container, options);
+        this.initObjects(container, options);
+
+        this.initializationSuccess = this.map ? true : false;
+        this.palettesOptions = options.get("palettes");
     }
+
+    /**
+     * Initialize static class references for this instance
+     *
+     * @param {string|domnode} container the container to render this map into
+     * @param {object} options view options for constructing this map wrapper (usually map state from redux)
+     * @memberof MapWrapperOpenlayers
+     */
+    initStaticClasses(container, options) {
+        this.tileHandler = TileHandler;
+        this.mapUtil = MapUtil;
+        this.miscUtil = MiscUtil;
+    }
+
+    // initStaticClasses(container, options) {
+    //     MapWrapperOpenlayersCore.prototype.initStaticClasses.call(this, container, options);
+    //     this.mapUtil = MapUtil;
+    // }
 
     /**
      * Get layer data for pixel.
@@ -354,14 +385,18 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
             const bindParameter = layer.getIn([
                 "updateParameters",
                 "filters",
-                layer.get("bind_parameter")
+                layer.get("bindingParameter")
             ]);
-            if (bindParameter && bindParameter.get("value")) {
+            if (bindParameter && bindParameter.get("value") && bindParameter.get("property")) {
+                // get palette to apply to feature
+                const palette = this.palettesOptions.find(
+                    palette => palette.get("id") === layer.getIn(["palette", "name"])
+                );
                 return new Ol_Layer_Vector({
                     source: layerSource,
                     opacity: layer.get("opacity"),
                     visible: layer.get("isActive"),
-                    style: this.createVectorLayerStyle(layer, layer.get("palette"), bindParameter),
+                    style: this.createVectorLayerStyle(layer, palette, bindParameter),
                     extent: appConfig.DEFAULT_MAP_EXTENT
                 });
             } else {
@@ -387,13 +422,9 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
     createVectorLayerStyle(layer, palette, parameter) {
         return (feature, resolution) => {
             if (!feature.getStyle()) {
-                // let parameters = feature.get("parameterDescription");
-                // const parameter = parameters.find(param => {
-                //     return param.parameterCode === "35";
-                // });
                 const parameterValue = feature.get(parameter.get("property"));
                 let style = this.getLayerStyle(layer.get("vectorStyle"), undefined);
-                if (parameterValue) {
+                if (parameterValue && palette && palette.get("values")) {
                     const color = this.mapUtil.getFeatureColorFromPalette(
                         palette.toJS(),
                         parseFloat(parameterValue)
@@ -506,6 +537,40 @@ export default class MapWrapperOpenlayers extends MapWrapperOpenlayersCore {
                     zIndex: Infinity
                 });
         }
+    }
+
+    /**
+     * get the a string representing this layer to be used in the layer cache
+     *
+     * @param {ImmutableJS.Map} layer layer object from map state in redux
+     * @returns {string} string representing this layer
+     * @memberof MapWrapperOpenlayers
+     */
+    getCacheHash(layer) {
+        let variableHash = "";
+        if (layer.getIn(["updateParameters", "filters"]).size) {
+            // apply filters for cache
+            const filterHash = layer
+                .getIn(["updateParameters", "filters"])
+                .map((properties, key) => key + "_" + properties.get("value"))
+                .join("_");
+            if (filterHash) {
+                variableHash += filterHash;
+            }
+        }
+        if (layer.getIn(["updateParameters", "bbox"])) {
+            // apply bbox for cache
+            const bboxHash = this.map
+                .getView()
+                .calculateExtent(this.map.getSize())
+                .join("_");
+            if (bboxHash) {
+                variableHash += bboxHash;
+            }
+        }
+        return (
+            layer.get("id") + variableHash + moment(this.mapDate).format(layer.get("timeFormat"))
+        );
     }
 
     /**

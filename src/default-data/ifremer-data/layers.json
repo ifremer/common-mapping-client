@@ -4,7 +4,7 @@
             "id": "argo-discovery",
             "title": "Argo discovery",
             "type": "data",
-            "handleAs": "vector_date_geojson",
+            "handleAs": "vector_geojson_raster",
             "vectorStyle": "profile",
             "url": "http://bluecloud.odatis-ocean.fr/argo/api/monthly_argo_data?end_date={TIME_MAX}&output_format=geojson",
             "metadata": {
@@ -12,17 +12,27 @@
                 "handleAs": "json"
             },
             "thumbnailImage": "img/argo_discovery_thumbnail.png",
+            "bindingParameter":"selected_parameter",
             "updateParameters": {
                 "time": true,
-                "facets": {
+                "filters": {
                    "selected_parameter" : {
                         "label": "Select parameter",
                         "property":"selectedParameterMax",
                         "value": "",
-                        "list": [{"palette":"sea-surface-temp-ifremer", "label":"Sea water temperature","code":35},{"palette":"sea-surface-psal-ifremer","label":"Sea water salinity","code":30}],
+                        "list": [
+                            {"palette":"sea-surface-temp-ifremer", "label":"Sea water temperature","code":"35"},
+                            {"palette":"sea-surface-psal-ifremer","label":"Sea water salinity","code":"30"}
+                        ],
                         "type": "select"
                     }
                 }
+            },
+            "palette": {
+                "name": "sea-surface-temp-ifremer",
+                "handleAs": "json-fixed",
+                "min": 0,
+                "max": 32
             },
             "mapping": {
                 "title": "platformCode",

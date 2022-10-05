@@ -86,36 +86,30 @@ export default class MapReducer extends MapReducerCore {
      * @param {*} state
      * @param {*} action
      */
-    static bindLayerData(state, action) {
-        // activate data binding
-        if (action.value) {
-            action.layer = action.layer.set("bind_parameter", action.parameter);
-        } else {
-            if (action.layer.get("bind_parameter")) {
-                action.layer = action.layer.delete("bind_parameter");
+    static updateFilteredLayer(state, action) {
+        // resolve layer from id if necessary
+        let actionLayer = action.layer;
+        if (typeof actionLayer === "string") {
+            actionLayer = this.findLayerById(state, actionLayer);
+            if (typeof actionLayer === "undefined") {
+                return state;
             }
         }
 
-        // update palette
-        const updatedState = this.setLayerPalette(state, action);
-        action.layer = updatedState.getIn([
-            "layers",
-            action.layer.get("type"),
-            action.layer.get("id")
-        ]);
+        // shortcut non-updates
+        if (
+            action.parameter ===
+                actionLayer.getIn(["updateParameters", "filters", action.parameter]) &&
+            action.value ===
+                actionLayer.getIn(["updateParameters", "filters", action.parameter, "value"])
+        ) {
+            return state;
+        }
 
-        // update url
-        return this.updateFilteredLayer(state, action);
-    }
-
-    static updateFilteredLayer(state, action) {
-        // TODO : improve and add again ? shortcut non-updates
-        // if (
-        //     action.value ===
-        //     actionLayer.getIn(["updateParameters", "filters", action.parameter]).get("value")
-        // ) {
-        //     return state;
-        // }
+        // update palette if needed
+        if (action.palette) {
+            this.setLayerPalette(state, action);
+        }
 
         //mise a jour du parametre
         action.layer = action.layer.setIn(
@@ -130,13 +124,16 @@ export default class MapReducer extends MapReducerCore {
         let anyMapFail = false;
         let alerts = state.get("alerts");
         let actionLayer = action.layer;
+        if (typeof actionLayer === "string") {
+            actionLayer = this.findLayerById(state, actionLayer);
+            if (typeof actionLayer === "undefined") {
+                return state;
+            }
+        }
 
         // update each map
         state.get("maps").forEach(map => {
             if (actionLayer.get("isActive")) {
-                if (actionLayer.getIn(["updateParameters", "filters", action.parameter])) {
-                    map.clearCacheForLayer(actionLayer);
-                }
                 // update the layer and track if any fail
                 if (!map.updateLayer(actionLayer)) {
                     let contextStr = map.is3D ? "3D" : "2D";
@@ -181,27 +178,30 @@ export default class MapReducer extends MapReducerCore {
             }
         }
 
-        let newLayer = actionLayer.delete("palette");
+        // get palette values
+        const palette = state.get("palettes").find(palette => palette.get("id") === action.palette);
+
         if (action.palette) {
-            // get palette min/max
-            const minKey = action.palette.get(0).get("value");
+            // define min/max
+            const paletteValues = palette.get("values") || [];
+            const minKey = paletteValues.get(0).get("value");
             const min = minKey.match(/\d+/g)[0] || "0";
-            const maxKey = action.palette.get(action.palette.size - 1).get("value");
+            const maxKey = paletteValues.get(paletteValues.size - 1).get("value");
             const max = maxKey.match(/\d+/g)[0] || "0";
 
             // update palette name
-            newLayer = actionLayer.delete("palette");
-            if (action.paletteId) {
-                newLayer = actionLayer
-                    .setIn(["palette", "name"], action.paletteId)
-                    .setIn(["palette", "handleAs"], "json-fixed")
-                    .setIn(["palette", "min"], min)
-                    .setIn(["palette", "max"], max)
-                    .setIn(["palette", "values"], action.palette);
-            }
+            const newLayer = actionLayer
+                .setIn(["palette", "name"], action.palette)
+                .setIn(["palette", "min"], min)
+                .setIn(["palette", "max"], max);
+            action.layer = newLayer;
+            state = state.setIn(
+                ["layers", actionLayer.get("type"), actionLayer.get("id")],
+                newLayer
+            );
         }
 
-        return state.setIn(["layers", actionLayer.get("type"), actionLayer.get("id")], newLayer);
+        return state;
     }
 
     static mapMoveEnd(state, action) {
@@ -209,16 +209,29 @@ export default class MapReducer extends MapReducerCore {
         // update active layers on the map with bbox update parameter activated
         state.get("layers").forEach(layerSection => {
             layerSection.forEach(layer => {
-                if (layer.get("isActive") && layer.get("updateParameters").get("bbox")) {
-                    const parameter = layer.get("bindingParameter");
-                    const value = layer.getIn(["updateParameters", "filters", parameter, "value"]);
-                    const actionFilterLayer = {
-                        type: action.type,
-                        layer: layer,
-                        parameter: parameter,
-                        value: value
-                    };
-                    this.updateFilteredLayer(state, actionFilterLayer);
+                if (layer.get("isActive") && layer.getIn(["updateParameters", "bbox"])) {
+                    if (layer.getIn(["updateParameters", "filters"]).size) {
+                        const parameter = layer.get("bindingParameter");
+                        const value = layer.getIn([
+                            "updateParameters",
+                            "filters",
+                            parameter,
+                            "value"
+                        ]);
+                        const actionFilterLayer = {
+                            type: action.type,
+                            layer: layer,
+                            parameter: parameter,
+                            value: value
+                        };
+                        this.updateFilteredLayer(state, actionFilterLayer);
+                    } else {
+                        const actionLayer = {
+                            type: action.type,
+                            layer: layer
+                        };
+                        this.updateLayer(state, actionLayer);
+                    }
                 }
             });
         });
