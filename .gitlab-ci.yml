@@ -205,7 +205,6 @@ gitlab-release:
         docker build
         --pull
         --cache-from ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
-        --pull
         -t ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
         --target runtime
         -f docker/Dockerfile
