@@ -59,6 +59,7 @@ prepare:
     # Build and push the CI image
     - >
         docker build
+        --pull
         --cache-from ${CI_DEPS_CACHE_IMAGE}
         -t ${CI_DEPS_CACHE_IMAGE}
         --build-arg BUILDKIT_INLINE_CACHE=1
@@ -68,6 +69,7 @@ prepare:
     - docker push ${CI_DEPS_CACHE_IMAGE}
     - >
         docker build
+        --pull
         --cache-from ${CI_BUILD_IMAGE}
         -t ${CI_BUILD_IMAGE}
         --build-arg BUILDKIT_INLINE_CACHE=1
@@ -199,9 +201,9 @@ gitlab-release:
   stage: docker
   script:
     # Build docker image
-    - docker pull ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} || true
     - >
         docker build
+        --pull
         --cache-from ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
         --pull
         -t ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
