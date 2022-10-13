@@ -19,7 +19,8 @@ default:
 
 variables:
   DOCKER_IMAGE_REGISTRY: gitlab-registry.ifremer.fr/ifremer-commons/docker/images/
-  CI_BUILD_IMAGE: $CI_REGISTRY_IMAGE/build:develop
+  CI_DEPS_CACHE_IMAGE: $CI_REGISTRY_IMAGE/environment:deps-cache
+  CI_BUILD_IMAGE: $CI_REGISTRY_IMAGE/environment:builder-base
   BUILD_CACHE_DIR: /tmp/.build-cache
   DOCKER_BUILDKIT: 1
   ENV_FILE: variables.env
@@ -51,12 +52,28 @@ variables:
 # offers possibility to cache project dependencies so we don't
 # have to download them every time.
 # ---------------------------------------------------------------
-build:env:
+prepare:
   extends: .docker
   stage: environment
   script:
     # Build and push the CI image
-    - docker build --cache-from ${CI_BUILD_IMAGE} -t ${CI_BUILD_IMAGE} --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg="CACHE_DIR=${BUILD_CACHE_DIR}" --build-arg="IMAGE_REGISTRY=${DOCKER_IMAGE_REGISTRY}" -f docker/build/Dockerfile .
+    - >
+        docker build
+        --cache-from ${CI_DEPS_CACHE_IMAGE}
+        -t ${CI_DEPS_CACHE_IMAGE}
+        --build-arg BUILDKIT_INLINE_CACHE=1
+        --target deps-cache
+        -f docker/Dockerfile
+        .
+    - docker push ${CI_DEPS_CACHE_IMAGE}
+    - >
+        docker build
+        --cache-from ${CI_BUILD_IMAGE}
+        -t ${CI_BUILD_IMAGE}
+        --build-arg BUILDKIT_INLINE_CACHE=1
+        --target builder-base
+        -f docker/Dockerfile
+        .
     - docker push ${CI_BUILD_IMAGE}
   except:
     - tags
@@ -67,7 +84,7 @@ build:env:
 # ---------------------------------------------------------------
 .build:
   stage: build
-  needs: ["build:env"]
+  needs: ["prepare"]
   script:
     # Get build cache dependencies
     - cp -R ${BUILD_CACHE_DIR}/* .
@@ -87,22 +104,16 @@ build:env:
 build:
   extends: .build
   image: ${CI_BUILD_IMAGE}
-  only:
-    - develop
-
-build:feature:
-  extends: .build
-  image: ${CI_BUILD_IMAGE}
-  only:
-    - /^feature\/.*/
-  when: manual
+  except:
+    - tags
+    - master
 
 # ---------------------------------------------------------------
 # Tests jobs
 # ---------------------------------------------------------------
 .test:
   stage: test
-  needs: ["build:env"]
+  needs: ["prepare"]
   script:
     # Get project dependencies
     - cp -R ${BUILD_CACHE_DIR}/* .
@@ -189,16 +200,25 @@ gitlab-release:
   script:
     # Build docker image
     - docker pull ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} || true
-    - docker build --cache-from ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} --pull -t ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} --build-arg="IMAGE_REGISTRY=${DOCKER_IMAGE_REGISTRY}" -f docker/run/Dockerfile .
+    - >
+        docker build
+        --cache-from ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
+        --pull
+        -t ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
+        --target runtime
+        -f docker/Dockerfile
+        .
     - docker push ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
 
 docker:feature:
   extends: .docker-build
-  needs: ["build:feature"]
+  needs: ["build"]
   variables:
     IMAGE_TAG: feature
   only:
     - /^feature\/.*/
+    - /^bug\/.*/
+    - /^hotfix\/.*/
   when: manual
 
 docker:develop:
