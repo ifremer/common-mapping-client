@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 SCRIPT_DIR=$(dirname $0)
 BASEDIR=$(cd "${SCRIPT_DIR}" && pwd -P)
 
@@ -6,12 +6,12 @@ PORT=$1
 PROFILE=$2
 VERSION=$3
 [[ "_${VERSION}" = "_" ]] && VERSION=develop
-[[ "_${PORT}" = "_" && "${VERSION}" = "develop" ]] && PORT=3000
+[[ "_${PORT}" = "_" ]] && PORT=3000
 [[ "_${PROFILE}" = "_" ]] && PROFILE=ifremer
 
 CI_REGISTRY=gitlab-registry.ifremer.fr
 CI_PROJECT_NAME=common-mapping-client
-CI_PROJECT_PATH=ifremer-commons/reactjs
+CI_PROJECT_PATH=ifremer-commons/reactjs/common-mapping-client
 CI_REGISTRY_IMAGE_PATH=${CI_REGISTRY}/${CI_PROJECT_PATH}
 CI_REGISTER_USER=gitlab+deploy-token
 CI_REGISTER_PWD=2gSCrTHB69zHqtbMmFMM
