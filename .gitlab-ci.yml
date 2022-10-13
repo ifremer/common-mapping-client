@@ -167,7 +167,7 @@ test:
       - ${BUILD_ARTIFACT}
     reports:
       dotenv: ${ENV_FILE}
-    expire_in: 12 hours
+    expire_in: never
   allow_failure: false
   only:
       - develop
