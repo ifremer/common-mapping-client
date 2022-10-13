@@ -99,7 +99,7 @@ prepare:
       - ${BUILD_ARTIFACT}
     reports:
       dotenv: ${ENV_FILE}
-    expire_in: 12 hours
+    expire_in: 60 minutes
 
 build:
   extends: .build
