@@ -10,7 +10,7 @@ stages:
   - docs
 
 default:
-  tags: ["api-common"]
+  tags: ["ifremer-commons"]
   image: gitlab-registry.ifremer.fr/ifremer-commons/docker/images/node:12
 
 # ---------------------------------------------------------------
